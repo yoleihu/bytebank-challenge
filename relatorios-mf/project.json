@@ -1,30 +1,30 @@
 {
-  "name": "host-app",
-  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "name": "relatorios-mf",
+  "$schema": "../node_modules/nx/schemas/project-schema.json",
   "projectType": "application",
   "prefix": "app",
-  "sourceRoot": "apps/host-app/src",
+  "sourceRoot": "relatorios-mf/src",
   "tags": [],
   "targets": {
     "build": {
       "executor": "@nx/angular:webpack-browser",
       "outputs": ["{options.outputPath}"],
       "options": {
-        "outputPath": "dist/apps/host-app/browser",
-        "index": "apps/host-app/src/index.html",
-        "main": "apps/host-app/src/main.ts",
+        "outputPath": "dist/relatorios-mf/browser",
+        "index": "relatorios-mf/src/index.html",
+        "main": "relatorios-mf/src/main.ts",
         "polyfills": ["zone.js"],
-        "tsConfig": "apps/host-app/tsconfig.app.json",
+        "tsConfig": "relatorios-mf/tsconfig.app.json",
         "inlineStyleLanguage": "scss",
         "assets": [
           {
             "glob": "**/*",
-            "input": "apps/host-app/public"
+            "input": "relatorios-mf/public"
           }
         ],
-        "styles": ["apps/host-app/src/styles.scss"],
+        "styles": ["relatorios-mf/src/styles.scss"],
         "customWebpackConfig": {
-          "path": "apps/host-app/webpack.config.ts"
+          "path": "relatorios-mf/webpack.config.ts"
         }
       },
       "configurations": {
@@ -43,7 +43,7 @@
           ],
           "outputHashing": "all",
           "customWebpackConfig": {
-            "path": "apps/host-app/webpack.prod.config.ts"
+            "path": "relatorios-mf/webpack.prod.config.ts"
           }
         },
         "development": {
@@ -59,24 +59,25 @@
     },
     "serve": {
       "continuous": true,
-      "executor": "@nx/angular:module-federation-dev-server",
+      "executor": "@nx/angular:dev-server",
       "configurations": {
         "production": {
-          "buildTarget": "host-app:build:production"
+          "buildTarget": "relatorios-mf:build:production"
         },
         "development": {
-          "buildTarget": "host-app:build:development"
+          "buildTarget": "relatorios-mf:build:development"
         }
       },
       "defaultConfiguration": "development",
       "options": {
-        "publicHost": "http://localhost:4200"
+        "port": 4201,
+        "publicHost": "http://localhost:4201"
       }
     },
     "extract-i18n": {
       "executor": "@angular-devkit/build-angular:extract-i18n",
       "options": {
-        "buildTarget": "host-app:build"
+        "buildTarget": "relatorios-mf:build"
       }
     },
     "lint": {
@@ -86,24 +87,34 @@
       "executor": "@nx/vite:test",
       "outputs": ["{options.reportsDirectory}"],
       "options": {
-        "reportsDirectory": "../../coverage/apps/host-app"
+        "reportsDirectory": "../coverage/relatorios-mf"
       }
     },
     "serve-static": {
       "continuous": true,
       "executor": "@nx/web:file-server",
+      "defaultConfiguration": "production",
       "options": {
-        "buildTarget": "host-app:build",
-        "spa": true
+        "buildTarget": "relatorios-mf:build",
+        "port": 4201,
+        "watch": false
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "relatorios-mf:build:development"
+        },
+        "production": {
+          "buildTarget": "relatorios-mf:build:production"
+        }
       }
     },
     "server": {
       "dependsOn": ["build"],
       "executor": "@angular-devkit/build-angular:server",
       "options": {
-        "outputPath": "dist/apps/host-app/server",
-        "main": "apps/host-app/src/server.ts",
-        "tsConfig": "apps/host-app/tsconfig.server.json",
+        "outputPath": "dist/relatorios-mf/server",
+        "main": "relatorios-mf/src/server.ts",
+        "tsConfig": "relatorios-mf/tsconfig.server.json",
         "inlineStyleLanguage": "scss"
       },
       "configurations": {
@@ -125,12 +136,12 @@
       "executor": "@angular-devkit/build-angular:ssr-dev-server",
       "configurations": {
         "development": {
-          "browserTarget": "host-app:build:development",
-          "serverTarget": "host-app:server:development"
+          "browserTarget": "relatorios-mf:build:development",
+          "serverTarget": "relatorios-mf:server:development"
         },
         "production": {
-          "browserTarget": "host-app:build:production",
-          "serverTarget": "host-app:server:production"
+          "browserTarget": "relatorios-mf:build:production",
+          "serverTarget": "relatorios-mf:server:production"
         }
       },
       "defaultConfiguration": "development"
@@ -142,12 +153,12 @@
       },
       "configurations": {
         "development": {
-          "browserTarget": "host-app:build:development",
-          "serverTarget": "host-app:server:development"
+          "browserTarget": "relatorios-mf:build:development",
+          "serverTarget": "relatorios-mf:server:development"
         },
         "production": {
-          "browserTarget": "host-app:build:production",
-          "serverTarget": "host-app:server:production"
+          "browserTarget": "relatorios-mf:build:production",
+          "serverTarget": "relatorios-mf:server:production"
         }
       },
       "defaultConfiguration": "production"
