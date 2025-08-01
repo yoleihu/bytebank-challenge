@@ -1,9 +1,9 @@
 import { ModuleFederationConfig } from '@nx/module-federation';
 
 const config: ModuleFederationConfig = {
-  name: 'relatorios-mf',
+  name: 'resume-account-mf',
   exposes: {
-    './Routes': 'relatorios-mf/src/app/remote-entry/entry.routes.ts',
+    './Routes': 'resume-account-mf/src/app/remote-entry/entry.routes.ts',
   },
 };
 

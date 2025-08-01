@@ -3,9 +3,9 @@ import { Route } from '@angular/router';
 
 export const appRoutes: Route[] = [
   {
-    path: 'relatorios-mf',
+    path: 'resume-account-mf',
     loadChildren: () =>
-      import('relatorios_mf/Routes').then((m) => m!.remoteRoutes),
+      import('resume_account_mf/Routes').then((m) => m!.remoteRoutes),
   },
   {
     path: '',

@@ -29,7 +29,7 @@
       "path": "./tsconfig.spec.json"
     },
     {
-      "path": "relatorios-mf/tsconfig.server.json"
+      "path": "resume-account-mf/tsconfig.server.json"
     }
   ]
 }
