@@ -4,8 +4,8 @@
   "license": "MIT",
   "scripts": {
     "serve:all": "concurrently -k -n resume-account-mf,host-app -c blue,green \"npm:serve:resume-account-mf\" \"npm:serve:host-app\"",
-    "serve:resume-account-mf": "nx serve resume-account-mf",
-    "serve:host-app": "wait-on http://localhost:4201 && nx serve host-app --devRemotes=resume-account-mf"
+    "serve:resume-account-mf": "node --max_old_space_size=4096 ./node_modules/.bin/nx serve resume-account-mf",
+    "serve:host-app": "wait-on http://localhost:4201 && node --max_old_space_size=4096 ./node_modules/.bin/nx serve host-app --devRemotes=resume-account-mf"
   },
   "private": true,
   "dependencies": {

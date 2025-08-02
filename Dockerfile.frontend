@@ -1,0 +1,47 @@
+# =============================================================
+# ESTÁGIO 1: Build da Aplicação Angular
+# Usamos uma imagem Node.js completa para ter acesso ao npm e Nx
+# =============================================================
+FROM node:20-alpine AS builder
+
+# Define o diretório de trabalho dentro do contêiner
+WORKDIR /usr/src/app
+
+# Copia os arquivos de configuração do workspace. Isso aproveita o cache do Docker.
+# Se esses arquivos não mudarem, o 'npm install' não rodará de novo.
+COPY package*.json ./
+COPY nx.json ./
+COPY tsconfig.base.json ./
+
+# Instala todas as dependências do monorepo
+RUN npm install
+
+# Copia todo o código-fonte do monorepo para dentro do contêiner
+COPY . .
+
+# Executa o build de produção para a aplicação 'host-app'.
+# O Nx é inteligente e vai construir também o microfrontend 'relatorios-mf' se for uma dependência.
+RUN npx nx build host-app --configuration=production
+
+
+# =============================================================
+# ESTÁGIO 2: Servir os Arquivos com Nginx
+# Usamos uma imagem Nginx super leve para o ambiente de produção
+# =============================================================
+FROM nginx:1.23-alpine
+
+# Remove a configuração padrão do Nginx
+RUN rm /etc/nginx/conf.d/default.conf
+
+# Copia nosso arquivo de configuração customizado para o Nginx (vamos criá-lo a seguir)
+COPY nginx.conf /etc/nginx/conf.d
+
+# Copia os arquivos compilados do estágio 'builder' para a pasta que o Nginx serve
+# O caminho '/usr/src/app/dist/apps/host-app/browser' é onde o Nx coloca o build final
+COPY --from=builder /usr/src/app/dist/apps/host-app/browser /usr/share/nginx/html
+
+# Expõe a porta 80, que é a porta padrão que o Nginx escuta
+EXPOSE 80
+
+# Comando para iniciar o servidor Nginx quando o contêiner iniciar
+CMD ["nginx", "-g", "daemon off;"]

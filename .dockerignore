@@ -1,0 +1,35 @@
+# Arquivo .dockerignore
+
+# Ignorar dependências, elas serão instaladas dentro do contêiner
+node_modules
+
+# Ignorar a pasta de build, ela será gerada dentro do contêiner
+dist
+
+# Ignorar o cache do Nx
+.nx/cache
+
+# Ignorar arquivos de log do npm
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Ignorar configurações de IDE e sistema
+.idea
+.vscode
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Ignorar arquivos do Git
+.git
+.gitignore
+
+node_modules
+dist
+tmp
+.nx
+.git
+.vscode

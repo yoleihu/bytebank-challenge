@@ -1,0 +1,10 @@
+types {
+    text/html                             html htm shtml;
+    text/css                              css;
+    application/javascript                js mjs; # <-- A LINHA MÁGICA
+    application/json                      json;
+    image/gif                             gif;
+    image/jpeg                            jpeg jpg;
+    image/png                             png;
+    # ... (outros tipos que o Nginx já conhece)
+}
