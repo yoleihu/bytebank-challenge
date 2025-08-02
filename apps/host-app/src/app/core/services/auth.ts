@@ -4,6 +4,7 @@ import { IAuthService } from '@core/interfaces/auth.interface';
 import { User } from '@core/models/user';
 import { Observable, tap } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -11,7 +12,7 @@ import { HttpClient } from '@angular/common/http';
 export class AuthService implements IAuthService {
   private router = inject(Router);
   private http = inject(HttpClient);
-  private apiUrl = 'http://localhost:3000';
+  private apiUrl = environment.apiUrl;
   private tokenKey = 'authToken';
   private userIdKey = 'userId';
 
@@ -50,7 +51,7 @@ export class AuthService implements IAuthService {
     return this.http.post<any>(`${this.apiUrl}/user`, userData);
   }
 
-  getTokenPayload(): User & {exp: number} | null {
+  getTokenPayload(): User & { exp: number } | null {
     const token = localStorage.getItem('token');
     if (!token) return null;
 
@@ -82,7 +83,7 @@ export class AuthService implements IAuthService {
   }
 
   private _generateJwt(user: User): void {
-    const payload: User & {exp: number} = {
+    const payload: User & { exp: number } = {
       id: user.id,
       email: user.email,
       username: user.username,

@@ -9,10 +9,10 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const notificationService = inject(NotificationService);
 
   //@to do validar exibição de toast para token expirado
-  if (!auth.isAuthenticated() && !req.url.includes('user')) {
+  if (!auth.isAuthenticated() && !req.url.includes('user/auth') && !req.url.includes('user')) {
     notificationService.showToast('Sessão expirada', 'error');
-    auth.logout(); 
-    return EMPTY //bloqueio ou encerra a requisição sem lançar erro
+    auth.logout();
+    return EMPTY
   }
 
   const token = localStorage.getItem('authToken');
@@ -20,7 +20,16 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   if (token) {
     req = req.clone({
       setHeaders: {
-        Authorization: `Bearer ${token}`
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      }
+    });
+  } else {
+    req = req.clone({
+      setHeaders: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
       }
     });
   }

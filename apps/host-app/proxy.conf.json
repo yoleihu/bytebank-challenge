@@ -1,0 +1,10 @@
+{
+  "/api": {
+    "target": "https://bytebank-backend-production-ee71.up.railway.app",
+    "secure": true,
+    "changeOrigin": true,
+    "pathRewrite": {
+      "^/api": ""
+    }
+  }
+} 

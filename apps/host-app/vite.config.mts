@@ -9,6 +9,16 @@ export default defineConfig(() => ({
   root: __dirname,
   cacheDir: '../../node_modules/.vite/apps/host-app',
   plugins: [angular(), nxViteTsPaths(), nxCopyAssetsPlugin(['*.md'])],
+  server: {
+    proxy: {
+      '/api': {
+        target: 'https://bytebank-backend-production-ee71.up.railway.app',
+        changeOrigin: true,
+        secure: true,
+        rewrite: (path) => path.replace(/^\/api/, '')
+      }
+    }
+  },
   resolve: {
     alias: {
       '@images': resolve(__dirname, 'src/assets/images'),
