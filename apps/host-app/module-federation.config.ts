@@ -1,24 +1,15 @@
 import { ModuleFederationConfig } from '@nx/module-federation';
-import { environment } from './src/environments/environment';
+
+const isProd = process.env.NODE_ENV === 'production';
+
+export const environment = {
+  production: isProd,
+  mfUrl: isProd ? process.env['NG_APP_MF_URL'] as string : 'http://localhost:4201',
+};
 
 const config: ModuleFederationConfig = {
   name: 'host-app',
-  /**
-   * To use a remote that does not exist in your current Nx Workspace
-   * You can use the tuple-syntax to define your remote
-   *
-   * remotes: [['my-external-remote', 'https://nx-angular-remote.netlify.app']]
-   *
-   * You _may_ need to add a `remotes.d.ts` file to your `src/` folder declaring the external remote for tsc, with the
-   * following content:
-   *
-   * declare module 'my-external-remote';
-   *
-   */
   remotes: [['resume-account-mf', environment.mfUrl]],
 };
 
-/**
- * Nx requires a default export of the config to allow correct resolution of the module federation graph.
- **/
 export default config;
