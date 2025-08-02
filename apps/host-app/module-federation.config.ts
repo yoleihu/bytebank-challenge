@@ -12,4 +12,7 @@ const config: ModuleFederationConfig = {
   remotes: [['resume-account-mf', environment.mfUrl]],
 };
 
+console.log('NODE_ENV:', process.env.NODE_ENV);
+console.log('NG_APP_MF_URL:', process.env['NG_APP_MF_URL']);
+
 export default config;
