@@ -1,4 +1,5 @@
 export const environment = {
   production: true,
-  apiUrl: 'https://bytebank-backend-production-ee71.up.railway.app'
+  apiUrl: process.env['NG_APP_API_URL'],
+  mfUrl: process.env['NG_APP_MF_URL']
 }; 

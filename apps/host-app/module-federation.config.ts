@@ -1,4 +1,5 @@
 import { ModuleFederationConfig } from '@nx/module-federation';
+import { environment } from './src/environments/environment';
 
 const config: ModuleFederationConfig = {
   name: 'host-app',
@@ -14,7 +15,7 @@ const config: ModuleFederationConfig = {
    * declare module 'my-external-remote';
    *
    */
-  remotes: [['resume-account-mf', 'http://localhost:4201']],
+  remotes: [['resume-account-mf', environment.mfUrl]],
 };
 
 /**
