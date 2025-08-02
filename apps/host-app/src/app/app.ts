@@ -1,9 +1,11 @@
 import { Component } from '@angular/core';
 import { RouterModule } from '@angular/router';
+import { SkipLinksComponent } from './shared/components/skip-links/skip-links';
 
 @Component({
   imports: [
-    RouterModule
+    RouterModule,
+    SkipLinksComponent
   ],
   selector: 'app-root',
   templateUrl: './app.html',

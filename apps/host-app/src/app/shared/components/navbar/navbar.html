@@ -1,92 +1,96 @@
 @if(isHomePage()) {
-  <mat-toolbar class="home-navbar">
-    @if(!isMobile()) {
-      <div class="nav-content">
-        <div class="bytebank-pages">
-          <div class="logo">
-            <img src="assets/images/logo.png" alt="Bytebank Logo"/>
-          </div>
-          <a routerLink="/sobre">Sobre</a>
-          <a routerLink="/sobre">Serviços</a>
-        </div>
-        <div class="actions-login">
-          <a tabindex="0"
-              (click)="openAccountDialog(true)"
-              (keyup.enter)="openAccountDialog(true)"
-              (keyup.space)="openAccountDialog(true)">
-            Abrir minha conta
-          </a>
-          <a tabindex="0"
-              (click)="openAccountDialog(false)"
-              (keyup.enter)="openAccountDialog(false)"
-              (keyup.space)="openAccountDialog(false)">
-            Já tenho conta
-          </a>
-        </div>
+<mat-toolbar class="home-navbar" role="banner" aria-label="Navegação principal">
+  @if(!isMobile()) {
+  <div class="nav-content">
+    <nav class="bytebank-pages" role="navigation" aria-label="Menu principal">
+      <div class="logo">
+        <img src="assets/images/logo.png" alt="Bytebank Logo" aria-label="Logo do Bytebank" />
       </div>
-    } @else {
-      <div class="nav-content">
-        <button mat-icon-button (click)="toggleMenu()">
-          <mat-icon fontIcon="menu">menu</mat-icon>
-        </button>
-        <div class="logo">
-          <img src="assets/images/logo.png" alt="Bytebank Logo"/>
-        </div>
-      </div>
-    }
-  </mat-toolbar>
-} @else {
-  <mat-toolbar class="navbar">
-    <!-- Botão de toggle do sidebar (apenas mobile) -->
-    <button 
-      mat-icon-button 
-      class="sidebar-toggle-btn" 
-      (click)="toggleSidebar()"
-      *ngIf="isMobile()">
-      <mat-icon>{{ isSidebarOpen() ? 'menu_open' : 'menu' }}</mat-icon>
+      <a routerLink="/sobre" aria-label="Ir para página Sobre">Sobre</a>
+      <a routerLink="/sobre" aria-label="Ir para página Serviços">Serviços</a>
+    </nav>
+    <div class="actions-login" role="group" aria-label="Ações de login">
+      <a tabindex="0" role="button" (click)="openAccountDialog(true)" (keyup.enter)="openAccountDialog(true)"
+        (keyup.space)="openAccountDialog(true)" aria-label="Abrir minha conta">
+        Abrir minha conta
+      </a>
+      <a tabindex="0" role="button" (click)="openAccountDialog(false)" (keyup.enter)="openAccountDialog(false)"
+        (keyup.space)="openAccountDialog(false)" aria-label="Já tenho conta">
+        Já tenho conta
+      </a>
+    </div>
+  </div>
+  } @else {
+  <div class="nav-content">
+    <button mat-icon-button (click)="toggleMenu()" aria-label="Abrir menu de navegação" aria-expanded="false"
+      aria-controls="mobile-menu">
+      <mat-icon fontIcon="menu" aria-hidden="true">menu</mat-icon>
     </button>
-
     <div class="logo">
-      <img src="assets/images/logo.png" alt="Bytebank Logo" />
+      <img src="assets/images/logo.png" alt="Bytebank Logo" aria-label="Logo do Bytebank" />
     </div>
+  </div>
+  }
+</mat-toolbar>
+} @else {
+<mat-toolbar class="navbar" role="banner" aria-label="Navegação do usuário">
+  <!-- Botão de toggle do sidebar (apenas mobile) -->
+  <button mat-icon-button class="sidebar-toggle-btn" (click)="toggleSidebar()" *ngIf="isMobile()"
+    aria-label="Alternar menu lateral" aria-expanded="false" aria-controls="sidebar">
+    <mat-icon aria-hidden="true">{{ isSidebarOpen() ? 'menu_open' : 'menu' }}</mat-icon>
+  </button>
 
-    <span class="spacer"></span>
+  <div class="logo">
+    <img src="assets/images/logo.png" alt="Bytebank Logo" aria-label="Logo do Bytebank" />
+  </div>
 
-    <!-- Menu do usuário -->
-    <div class="user-menu">
-      <button mat-icon-button [matMenuTriggerFor]="userMenu" class="user-avatar-btn">
-        <img src="assets/images/avatar.png" alt="User" class="avatar" />
+  <span class="spacer" aria-hidden="true"></span>
+
+  <!-- Menu do usuário -->
+  <div class="user-menu" role="group" aria-label="Menu do usuário">
+    <button mat-icon-button [matMenuTriggerFor]="userMenu" class="user-avatar-btn" aria-label="Abrir menu do usuário"
+      aria-haspopup="true" aria-expanded="false">
+      <img src="assets/images/avatar.png" alt="Avatar do usuário" class="avatar" />
+    </button>
+    <mat-menu #userMenu="matMenu" class="user-dropdown">
+      <button mat-menu-item aria-label="Ir para meu perfil">
+        <mat-icon aria-hidden="true">person</mat-icon>
+        <span>Meu Perfil</span>
       </button>
-      <mat-menu #userMenu="matMenu" class="user-dropdown">
-        <button mat-menu-item>
-          <mat-icon>person</mat-icon>
-          <span>Meu Perfil</span>
-        </button>
-        <button mat-menu-item>
-          <mat-icon>settings</mat-icon>
-          <span>Configurações</span>
-        </button>
-        <mat-divider></mat-divider>
-        <button mat-menu-item (click)="logout()">
-          <mat-icon>logout</mat-icon>
-          <span>Sair</span>
-        </button>
-      </mat-menu>
-    </div>
-  </mat-toolbar>
+      <button mat-menu-item aria-label="Ir para configurações">
+        <mat-icon aria-hidden="true">settings</mat-icon>
+        <span>Configurações</span>
+      </button>
+      <mat-divider aria-hidden="true"></mat-divider>
+      <button mat-menu-item (click)="logout()" aria-label="Sair da conta">
+        <mat-icon aria-hidden="true">logout</mat-icon>
+        <span>Sair</span>
+      </button>
+    </mat-menu>
+  </div>
+</mat-toolbar>
 }
 
 @if(isMenuOpen()) {
-  <div class="side-menu-backdrop"
-       tabindex="0"
-       (click)="toggleMenu()"
-       (keyup.enter)="toggleMenu()"
-       (keyup.space)="toggleMenu()"></div>
-  <nav class="side-menu">
-    <button mat-icon-button class="close-btn" (click)="toggleMenu()">
-      <mat-icon>close</mat-icon>
-    </button>
-    <a routerLink="/sobre" (click)="toggleMenu()">Sobre</a>
-    <a routerLink="/sobre" (click)="toggleMenu()">Serviços</a>
-  </nav>
+<div class="side-menu-backdrop" 
+     tabindex="0" 
+     role="button"
+     (click)="toggleMenu()" 
+     (keyup.enter)="toggleMenu()"
+     (keyup.space)="toggleMenu()"
+     aria-label="Fechar menu de navegação"></div>
+<nav class="side-menu" id="mobile-menu" role="navigation" aria-label="Menu de navegação móvel">
+  <button mat-icon-button 
+          class="close-btn" 
+          (click)="toggleMenu()"
+          aria-label="Fechar menu">
+    <mat-icon aria-hidden="true">close</mat-icon>
+  </button>
+  <a routerLink="/sobre" 
+     (click)="toggleMenu()" 
+     aria-label="Ir para página Sobre">Sobre</a>
+  <a routerLink="/sobre" 
+     (click)="toggleMenu()" 
+     aria-label="Ir para página Serviços">Serviços</a>
+</nav>
 }

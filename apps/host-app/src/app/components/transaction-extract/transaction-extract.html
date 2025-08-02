@@ -1,14 +1,19 @@
-<div class="extract-container">
+<div class="extract-container" role="region" aria-labelledby="extract-title">
   <div class="header" style="position: relative;">
-    <h3 class="title">Extrato</h3>
-    <button mat-icon-button class="filter-button" matTooltip="Filtrar" (click)="openFilterDialog()">
-      <mat-icon fontSet="material-symbols-outlined">filter_alt</mat-icon>
+    <h3 id="extract-title" class="title">Extrato</h3>
+    <button mat-icon-button class="filter-button" matTooltip="Filtrar" (click)="openFilterDialog()"
+      aria-label="Abrir filtros de transações" aria-expanded="false" aria-controls="filter-dialog">
+      <mat-icon fontSet="material-symbols-outlined" aria-hidden="true">filter_alt</mat-icon>
     </button>
 
-    <div class="filter-dialog-below" *ngIf="showFilter">
+    <div id="filter-dialog" class="filter-dialog-below" *ngIf="showFilter" role="dialog" aria-labelledby="filter-title"
+      aria-describedby="filter-description">
+      <h4 id="filter-title" class="sr-only">Filtros de transações</h4>
+      <p id="filter-description" class="sr-only">Configure os filtros para ordenar as transações</p>
+
       <mat-form-field appearance="fill">
-        <mat-label>Ordenar por</mat-label>
-        <mat-select [(ngModel)]="sort">
+        <mat-label for="sort-field">Ordenar por</mat-label>
+        <mat-select id="sort-field" [(ngModel)]="sort" aria-label="Selecionar critério de ordenação">
           <mat-option value="date">Data</mat-option>
           <mat-option value="amount">Valor</mat-option>
           <mat-option value="description">Descrição</mat-option>
@@ -16,15 +21,16 @@
       </mat-form-field>
 
       <mat-form-field appearance="fill">
-        <mat-label>Ordem</mat-label>
-        <mat-select [(ngModel)]="order">
+        <mat-label for="order-field">Ordem</mat-label>
+        <mat-select id="order-field" [(ngModel)]="order" aria-label="Selecionar ordem de classificação">
           <mat-option value="asc">Ascendente</mat-option>
           <mat-option value="desc">Descendente</mat-option>
         </mat-select>
       </mat-form-field>
       <div class="actions">
-        <button mat-stroked-button color="warn" (click)="showFilter = false">Cancelar</button>
-        <button mat-raised-button color="primary" (click)="applyFilter()">Aplicar</button>
+        <button mat-stroked-button color="warn" (click)="showFilter = false"
+          aria-label="Cancelar filtros">Cancelar</button>
+        <button mat-raised-button color="primary" (click)="applyFilter()" aria-label="Aplicar filtros">Aplicar</button>
       </div>
     </div>
   </div>
@@ -32,11 +38,13 @@
   <div *ngFor="let group of groupedTransactions">
     <h4>{{ group.month }}</h4>
 
-    <div *ngFor="let t of group.transactions" class="transaction">
+    <div *ngFor="let t of group.transactions" class="transaction" role="listitem"
+      [attr.aria-label]="'Transação de ' + (t.type === 'income' ? 'depósito' : 'transferência') + ' no valor de R$ ' + getPositiveAmount(t.amount)">
       <mat-icon fontSet="material-symbols-outlined" class="icon" [ngClass]="{ 
-          income: t.type === 'income', 
-          expense: t.type === 'expense' 
-        }">
+                  income: t.type === 'income', 
+                  expense: t.type === 'expense' 
+                }" [attr.aria-label]="t.type === 'income' ? 'Ícone de depósito' : 'Ícone de transferência'"
+        aria-hidden="true">
         {{ t.type === "income" ? "call_received" : "call_made" }}
       </mat-icon>
 
@@ -54,24 +62,26 @@
         R$ {{ getPositiveAmount(t.amount) | number : "1.2-2" }}
       </div>
 
-      <div class="actions">
-        <button (click)="downloadAttachment(t)">
-          <mat-icon class="icon-settings" matTooltip="Download do anexo"
-            fontSet="material-symbols-outlined">download</mat-icon>
+      <div class="actions" role="group" aria-label="Ações da transação">
+        <button (click)="downloadAttachment(t)" aria-label="Baixar anexo da transação">
+          <mat-icon class="icon-settings" matTooltip="Download do anexo" fontSet="material-symbols-outlined"
+            aria-hidden="true">download</mat-icon>
         </button>
 
-        <button (click)="openEditModal(t)">
-          <mat-icon class="icon-settings" matTooltip="Editar" fontSet="material-symbols-outlined">edit</mat-icon>
+        <button (click)="openEditModal(t)" aria-label="Editar transação">
+          <mat-icon class="icon-settings" matTooltip="Editar" fontSet="material-symbols-outlined"
+            aria-hidden="true">edit</mat-icon>
         </button>
 
-        <button color="warn" (click)="deleteTransaction(t.id!, t.description!)">
-          <mat-icon class="icon-settings" matTooltip="Excluir" fontSet="material-symbols-outlined">delete</mat-icon>
+        <button color="warn" (click)="deleteTransaction(t.id!, t.description!)" aria-label="Excluir transação">
+          <mat-icon class="icon-settings" matTooltip="Excluir" fontSet="material-symbols-outlined"
+            aria-hidden="true">delete</mat-icon>
         </button>
       </div>
     </div>
   </div>
 
   <mat-paginator [length]="totalItems" [pageSize]="10" [pageSizeOptions]="[5, 10, 25, 100]" [pageIndex]="0"
-    [hidePageSize]="true" aria-label="Select page" (page)="handlePageEvent($event)">
+    [hidePageSize]="true" aria-label="Navegação de páginas do extrato" (page)="handlePageEvent($event)">
   </mat-paginator>
 </div>

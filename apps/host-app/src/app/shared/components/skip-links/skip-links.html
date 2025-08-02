@@ -1,0 +1,9 @@
+<nav class="skip-links" aria-label="Links de navegação rápida">
+    @for (skipLink of skipLinks; track skipLink.id) {
+    <a [id]="skipLink.id" [href]="'#' + skipLink.target" class="skip-link" tabindex="0"
+        (click)="focusTarget(skipLink.target)" (keyup.enter)="focusTarget(skipLink.target)"
+        (keyup.space)="focusTarget(skipLink.target)">
+        {{ skipLink.label }}
+    </a>
+    }
+</nav>

@@ -1,63 +1,80 @@
-<mat-dialog-content>
+<mat-dialog-content role="dialog" aria-labelledby="login-title" aria-describedby="login-description">
   <div class="branding">
-    <img class="illustration" [src]="signupMode() ? 'assets/images/signup.png': 'assets/images/signin.png'" alt="">
+    <img class="illustration" 
+         [src]="signupMode() ? 'assets/images/signup.png': 'assets/images/signin.png'" 
+         [alt]="signupMode() ? 'Ilustração de cadastro' : 'Ilustração de login'"
+         aria-hidden="true">
   </div>
   <div class="login-container">
     <div class="signin-div">
-      <p class="login-message">
+      <h2 id="login-title" class="sr-only">
+        {{signupMode() ? 'Criar nova conta' : 'Fazer login'}}
+      </h2>
+      <p id="login-description" class="login-message">
         Bem vindo! Preencha os campos abaixo para {{signupMode() ? 'criar' : 'entrar na'}} sua conta corrente.
       </p>
     </div>
 
-    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <form [formGroup]="form" (ngSubmit)="onSubmit()" role="form" aria-labelledby="login-title">
       @if(signupMode()) {
         <mat-form-field>
-          <mat-label>Nome</mat-label>
+          <mat-label for="username-field">Nome</mat-label>
           <input
             matInput
+            id="username-field"
             formControlName="username"
             required
+            aria-describedby="username-error"
+            aria-invalid="form.controls.username.invalid"
           />
           @if (form.controls.username.invalid && (form.controls.username.dirty || form.controls.username.touched)) {
-            <mat-error>Nome é obrigatório</mat-error>
+            <mat-error id="username-error">Nome é obrigatório</mat-error>
           }
         </mat-form-field>
       }
       
       <mat-form-field>
-        <mat-label>Email</mat-label>
+        <mat-label for="email-field">Email</mat-label>
         <input
           matInput
+          id="email-field"
           placeholder="user@example.com"
           formControlName="email"
           required
+          type="email"
+          aria-describedby="email-error"
+          aria-invalid="form.controls.email.invalid"
         />
         @if (form.controls.email.getError('required') && (form.controls.email.dirty || form.controls.email.touched)) {
-          <mat-error>Email é obrigatório</mat-error>
+          <mat-error id="email-error">Email é obrigatório</mat-error>
         }
         @if (form.controls.email.getError('pattern') && (form.controls.email.dirty || form.controls.email.touched)) {
-          <mat-error>Por favor, informe um email válido <i>Ex.: {{"usuário@exemplo.com"}}</i></mat-error>
+          <mat-error id="email-error">Por favor, informe um email válido <i>Ex.: {{"usuário@exemplo.com"}}</i></mat-error>
         }
       </mat-form-field>
 
       <mat-form-field>
-        <mat-label>Senha</mat-label>
+        <mat-label for="password-field">Senha</mat-label>
         <input 
           matInput 
+          id="password-field"
           [attr.type]="showPassword() ? 'text' : 'password'" 
           formControlName="password"
+          aria-describedby="password-error"
+          aria-invalid="form.controls.password.invalid"
         />
         <button
           mat-icon-button
           matSuffix
           type="button"
           (click)="togglePassword()"
-          [attr.aria-label]="'Hide password'"
+          [attr.aria-label]="showPassword() ? 'Ocultar senha' : 'Mostrar senha'"
+          aria-pressed="showPassword()"
         >
-          <mat-icon>{{showPassword() ? 'visibility_off' : 'visibility'}}</mat-icon>
+          <mat-icon aria-hidden="true">{{showPassword() ? 'visibility_off' : 'visibility'}}</mat-icon>
         </button>
         @if (form.controls.password.invalid && (form.controls.password.dirty || form.controls.password.touched)) {
-          <mat-error>Insira uma senha válida</mat-error>
+          <mat-error id="password-error">Insira uma senha válida</mat-error>
         }
       </mat-form-field>
       <!-- <mat-checkbox class="checkbox" formControlName="agree">
@@ -70,12 +87,16 @@
         <mat-error><small>Aceite os termos para continuar</small></mat-error>
       } -->
       <mat-dialog-actions>
-        <button mat-button class="action-btn cancel" (click)="onCancelClick()">Cancelar</button>
+        <button mat-button 
+                class="action-btn cancel" 
+                (click)="onCancelClick()"
+                aria-label="Cancelar operação">Cancelar</button>
         <button 
           mat-button 
           cdkFocusInitial 
           class="action-btn save" 
           type="submit"
+          aria-label="Confirmar operação"
         >
           {{signupMode() ? 'Criar conta' : 'Acessar'}}
         </button>
