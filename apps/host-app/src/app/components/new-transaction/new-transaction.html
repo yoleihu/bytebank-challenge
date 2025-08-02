@@ -1,26 +1,38 @@
 <mat-card class="new-transaction-form" role="form" aria-labelledby="transaction-title">
   <h3 id="transaction-title" class="title">Nova Transação</h3>
 
-  <mat-form-field appearance="outline" class="full-width">
-    <mat-label for="transaction-type">Tipo de transação:</mat-label>
-    <mat-select id="transaction-type" [(ngModel)]="transactionType" aria-label="Selecionar tipo de transação">
+  <mat-form-field appearance="outline" class="full-width" [class.mat-form-field-invalid]="showTypeError">
+    <mat-label for="transaction-type">Tipo de transação: *</mat-label>
+    <mat-select id="transaction-type" [(ngModel)]="transactionType" aria-label="Selecionar tipo de transação"
+      (selectionChange)="onTypeChange()">
       <mat-option [value]="'Received'">Depósito</mat-option>
       <mat-option [value]="'Sent'">Transferência</mat-option>
     </mat-select>
+    <mat-error *ngIf="showTypeError" id="type-error">
+      Selecione o tipo de transação
+    </mat-error>
   </mat-form-field>
 
-  <mat-form-field appearance="outline" class="input-middle">
-    <mat-label for="amount-field">Valor:</mat-label>
+  <mat-form-field appearance="outline" class="input-middle" [class.mat-form-field-invalid]="showAmountError">
+    <mat-label for="amount-field">Valor: *</mat-label>
     <input matInput id="amount-field" type="text" mask="separator.2" thousandSeparator="." decimalMarker=","
-      prefix="R$ " [ngModel]="amount" (ngModelChange)="amount = $event" aria-label="Valor da transação em reais" />
+      prefix="R$ " [ngModel]="amount" (ngModelChange)="onAmountChange($event)" aria-label="Valor da transação em reais"
+      aria-describedby="amount-error" [attr.aria-invalid]="showAmountError" />
+    <mat-error *ngIf="showAmountError" id="amount-error">
+      Informe um valor válido maior que zero
+    </mat-error>
   </mat-form-field>
 
-  <mat-form-field appearance="outline" class="full-width">
-    <mat-label for="description-field">Descrição:</mat-label>
+  <mat-form-field appearance="outline" class="full-width" [class.mat-form-field-invalid]="showDescriptionError">
+    <mat-label for="description-field">Descrição: *</mat-label>
     <input matInput id="description-field" type="text" [(ngModel)]="description"
       placeholder="Digite uma descrição para a transação" maxlength="100" (input)="onDescriptionChange()"
-      aria-describedby="description-hint" aria-label="Descrição da transação" />
+      (blur)="onDescriptionBlur()" aria-describedby="description-hint description-error"
+      aria-label="Descrição da transação" [attr.aria-invalid]="showDescriptionError" />
     <mat-hint id="description-hint" align="end">{{ description.length || 0 }}/100</mat-hint>
+    <mat-error *ngIf="showDescriptionError" id="description-error">
+      Adicione uma descrição para a transação
+    </mat-error>
   </mat-form-field>
 
   <mat-form-field appearance="outline" class="full-width">
@@ -33,26 +45,44 @@
       aria-hidden="true">category</mat-icon>
   </mat-form-field>
 
-  <mat-form-field appearance="outline" class="input-middle">
+  <mat-form-field appearance="outline" class="input-middle" [class.mat-form-field-invalid]="showDateError">
     <mat-label for="date-field">Data</mat-label>
-    <input matInput id="date-field" [matDatepicker]="picker" [(ngModel)]="transactionDate"
-      placeholder="Escolha uma data" aria-label="Data da transação" />
+    <input matInput id="date-field" [matDatepicker]="picker" [(ngModel)]="transactionDate" (dateChange)="onDateChange()"
+      placeholder="Escolha uma data" aria-label="Data da transação" aria-describedby="date-error"
+      [attr.aria-invalid]="showDateError" />
     <mat-datepicker-toggle matSuffix [for]="picker" aria-label="Abrir seletor de data"></mat-datepicker-toggle>
     <mat-datepicker #picker></mat-datepicker>
+    <mat-error *ngIf="showDateError" id="date-error">
+      Selecione uma data válida (não pode ser futura)
+    </mat-error>
   </mat-form-field>
 
-  <mat-form-field appearance="outline" class="input-middle" (click)="fileInput.click()" style="cursor: pointer;">
-    <mat-label for="file-field">Comprovante</mat-label>
+  <mat-form-field appearance="outline" class="input-middle" (click)="fileInput.click()" style="cursor: pointer;"
+    [class.mat-form-field-invalid]="showFileError">
+    <mat-label for="file-field">Comprovante (opcional)</mat-label>
     <input matInput id="file-field" [value]="selectedFileName || ''" readonly
-      placeholder="Clique para anexar um arquivo" aria-label="Anexar comprovante da transação">
+      placeholder="Clique para anexar um arquivo" aria-label="Anexar comprovante da transação"
+      aria-describedby="file-error">
     <mat-icon matSuffix aria-hidden="true">attach_file</mat-icon>
-    <input hidden (change)="onFileSelected($event)" #fileInput type="file"
+    <mat-error *ngIf="showFileError" id="file-error">
+      Arquivo inválido ou muito grande (máx: 10MB)
+    </mat-error>
+    <input hidden (change)="onFileSelected($event)" #fileInput type="file" accept=".jpg,.jpeg,.png,.gif,.pdf,.txt"
       aria-label="Selecionar arquivo de comprovante" />
   </mat-form-field>
 
-  <button mat-flat-button color="primary" class="submit-btn input-middle"
-    [disabled]="!transactionType || amount === null || !transactionDate || !description" (click)="submitTransaction()"
-    aria-label="Enviar transação">
-    Enviar
-  </button>
+  <div class="form-actions">
+    <button mat-flat-button color="primary" class="submit-btn input-middle" [disabled]="isSubmitting || !isFormValid()"
+      (click)="submitTransaction()" aria-label="Enviar transação">
+      <mat-icon *ngIf="isSubmitting" class="loading-icon" aria-hidden="true">hourglass_empty</mat-icon>
+      {{ isSubmitting ? 'Enviando...' : 'Enviar' }}
+    </button>
+
+    <button mat-stroked-button type="button" class="reset-btn input-middle" (click)="resetForm()"
+      aria-label="Limpar formulário">
+      Limpar
+    </button>
+  </div>
+
+
 </mat-card>

@@ -65,7 +65,14 @@ export class NewTransaction {
   selectedFileName: string | null = null;
   private selectedFile: File | null = null;
   isLoadingCategory = false;
+  isSubmitting = false;
   private descriptionChangeSubject = new Subject<string>();
+
+  showTypeError = false;
+  showAmountError = false;
+  showDescriptionError = false;
+  showDateError = false;
+  showFileError = false;
 
   constructor() {
     // Configurar debounce para busca de categoria
@@ -100,12 +107,71 @@ export class NewTransaction {
     this.descriptionChangeSubject.next(this.description);
   }
 
+  onTypeChange() {
+    this.showTypeError = false;
+  }
+
+  onAmountChange(value: any) {
+    this.amount = value;
+    this.showAmountError = false;
+  }
+
+  onDescriptionBlur() {
+    this.showDescriptionError = false;
+  }
+
+  onDateChange() {
+    this.showDateError = false;
+  }
+
+  isFormValid(): boolean {
+    return !!(this.transactionType &&
+      this.amount !== null &&
+      this.amount > 0 &&
+      this.description.trim() &&
+      !this.showDateError);
+  }
+
+  resetForm(): void {
+    this.transactionType = null;
+    this.amount = null;
+    this.description = '';
+    this.category = '';
+    this.transactionDate = null;
+    this.selectedFile = null;
+    this.selectedFileName = null;
+
+    this.showTypeError = false;
+    this.showAmountError = false;
+    this.showDescriptionError = false;
+    this.showDateError = false;
+    this.showFileError = false;
+  }
+
   onFileSelected(event: any): void {
     const file: File = event.target.files[0];
+    this.showFileError = false;
 
     if (file) {
+      const maxSize = 10 * 1024 * 1024;
+      if (file.size > maxSize) {
+        this.showFileError = true;
+        this.notificationService.showValidationError('file');
+        event.target.value = ''; // Limpar input
+        return;
+      }
+
+      const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'application/pdf', 'text/plain'];
+      if (!allowedTypes.includes(file.type)) {
+        this.showFileError = true;
+        this.notificationService.showWarningToast('Formato de arquivo não suportado. Use: JPG, PNG, GIF, PDF ou TXT');
+        event.target.value = '';
+        return;
+      }
+
       this.selectedFile = file;
       this.selectedFileName = file.name;
+      this.notificationService.showInfoToast(`Arquivo "${file.name}" selecionado`);
     } else {
       this.selectedFile = null;
       this.selectedFileName = null;
@@ -113,6 +179,12 @@ export class NewTransaction {
   }
 
   submitTransaction(): void {
+    if (!this.validateForm()) {
+      return;
+    }
+
+    this.isSubmitting = true;
+
     if (this.transactionType && this.amount !== null && this.description.trim()) {
       const transaction: Transaction = {
         accountId: localStorage.getItem('accountId') ?? '0',
@@ -126,36 +198,77 @@ export class NewTransaction {
 
       this.transactionService.createTransaction(transaction).subscribe({
         next: (response: any) => {
-          this.notificationService.showToast('Transação criada com sucesso!', 'success');
-          this.transactionType = null;
-          this.amount = null;
-          this.description = '';
-          this.category = '';
-          this.transactionDate = null;
+          this.isSubmitting = false;
+          this.notificationService.showSuccessToast('Transação criada com sucesso!');
+          this.resetForm();
           const createdTransaction = response.result;
 
           if (this.selectedFile && createdTransaction.id) {
-            console.log('Enviando anexo...');
             this.transactionService
               .uploadAttachment(createdTransaction.id, this.selectedFile)
               .subscribe({
                 next: () => {
-                  console.log('Anexo enviado com sucesso!');
+                  this.notificationService.showInfoToast('Anexo enviado com sucesso!');
                   this.selectedFile = null;
                   this.selectedFileName = null;
                 },
                 error: (err) => {
-                  console.error('Erro ao enviar anexo:', err);
+                  this.notificationService.showUploadError(err);
                 },
               });
-          } else {
-            console.log('Transação criada sem anexo.');
           }
         },
         error: (err) => {
-          console.error('Erro ao criar transação:', err);
+          this.isSubmitting = false;
+          this.notificationService.showTransactionError(err);
         },
       });
     }
+  }
+
+  private validateForm(): boolean {
+    let isValid = true;
+
+    if (!this.transactionType) {
+      this.showTypeError = true;
+      this.notificationService.showValidationError('type');
+      isValid = false;
+    }
+
+    if (this.amount === null || this.amount <= 0) {
+      this.showAmountError = true;
+      this.notificationService.showValidationError('amount');
+      isValid = false;
+    }
+
+    if (!this.description.trim()) {
+      this.showDescriptionError = true;
+      this.notificationService.showValidationError('description');
+      isValid = false;
+    }
+
+    if (this.transactionDate && this.transactionDate > new Date()) {
+      this.showDateError = true;
+      this.notificationService.showWarningToast('A data da transação não pode ser futura');
+      isValid = false;
+    }
+
+    if (this.selectedFile) {
+      const maxSize = 10 * 1024 * 1024;
+      if (this.selectedFile.size > maxSize) {
+        this.showFileError = true;
+        this.notificationService.showValidationError('file');
+        isValid = false;
+      }
+
+      const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'application/pdf', 'text/plain'];
+      if (!allowedTypes.includes(this.selectedFile.type)) {
+        this.showFileError = true;
+        this.notificationService.showWarningToast('Formato de arquivo não suportado. Use: JPG, PNG, GIF, PDF ou TXT');
+        isValid = false;
+      }
+    }
+
+    return isValid;
   }
 }
