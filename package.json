@@ -2,7 +2,11 @@
   "name": "@bytebank-challenge/source",
   "version": "0.0.0",
   "license": "MIT",
-  "scripts": {},
+  "scripts": {
+    "serve:all": "concurrently -k -n resume-account-mf,host-app -c blue,green \"npm:serve:resume-account-mf\" \"npm:serve:host-app\"",
+    "serve:resume-account-mf": "nx serve resume-account-mf",
+    "serve:host-app": "wait-on http://localhost:4201 && nx serve host-app --devRemotes=resume-account-mf"
+  },
   "private": true,
   "dependencies": {
     "@angular/animations": "~20.1.3",
@@ -56,6 +60,7 @@
     "@vitest/ui": "^3.0.0",
     "angular-eslint": "^20.0.0",
     "browser-sync": "^3.0.0",
+    "concurrently": "^9.2.0",
     "eslint": "^9.8.0",
     "eslint-config-prettier": "^10.0.0",
     "jiti": "2.4.2",
@@ -66,7 +71,8 @@
     "typescript": "~5.8.2",
     "typescript-eslint": "^8.29.0",
     "vite": "^6.0.0",
-    "vitest": "^3.0.0"
+    "vitest": "^3.0.0",
+    "wait-on": "^8.0.4"
   },
   "overrides": {
     "ora": "5.4.1"
