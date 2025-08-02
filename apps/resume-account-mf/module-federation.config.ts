@@ -3,7 +3,7 @@ import { ModuleFederationConfig } from '@nx/module-federation';
 const config: ModuleFederationConfig = {
   name: 'resume-account-mf',
   exposes: {
-    './Routes': 'resume-account-mf/src/app/remote-entry/entry.routes.ts',
+    './Routes': 'apps/resume-account-mf/src/app/remote-entry/entry.routes.ts',
   },
 };
 

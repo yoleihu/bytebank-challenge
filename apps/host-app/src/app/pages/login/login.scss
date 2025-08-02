@@ -1,0 +1,88 @@
+@import '../../../assets/styles/imports';
+
+:host {
+  ::ng-deep {
+    .mat-mdc-dialog-content {
+      margin: auto;  
+      text-align: center;
+      padding: 0 4rem;
+    }
+    .mat-mdc-dialog-actions {
+      justify-content: end;
+    }
+  }
+}
+
+.branding {
+  text-align: center;
+  margin-bottom: $margin-medium;
+
+  img {
+    width: 16rem;
+  }
+}
+
+.login-container {
+  @include flex-column(flex-start, center);
+
+  .signin-div {
+    margin-bottom: $margin-large;
+    font-size: $body-medium;
+    color: $secondary-300;
+  }
+
+  form {
+    @include flex-column(flex-start, stretch);
+    width: 100%;
+    box-sizing: border-box;
+    
+    .button-wrapper {
+      @include flex-row(space-between, flex-start);
+      margin-top: $margin-small;
+
+      button {
+        @include button(
+          $primary, 
+          $white, 
+          $padding-medium, 
+          $border-radius-large
+        );
+        font-size: $body-medium;
+        border: 1px solid $primary-400;
+        width: 150px;
+      }
+
+      p.signup-text {
+        color: $white;
+        font-size: $body-small;
+        margin: 0;
+
+        a {
+          cursor: pointer;
+          color: darken($primary, 10%);
+          text-decoration: none;
+          font-weight: bold;
+          transition: color 0.3s ease;
+
+          &:hover {
+            color: darken($primary, 20%);
+          }
+        }
+      }
+    }
+  }
+}
+
+button.action-btn {
+  @include button(
+    $orange-400, 
+    $white, 
+    $padding-medium, 
+    $border-radius-large
+  );
+  font-weight: 300;
+
+  &.cancel {
+    background: $secondary-200;
+  }
+}

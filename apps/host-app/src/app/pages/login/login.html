@@ -1,0 +1,85 @@
+<mat-dialog-content>
+  <div class="branding">
+    <img class="illustration" [src]="signupMode() ? 'assets/images/signup.png': 'assets/images/signin.png'" alt="">
+  </div>
+  <div class="login-container">
+    <div class="signin-div">
+      <p class="login-message">
+        Bem vindo! Preencha os campos abaixo para {{signupMode() ? 'criar' : 'entrar na'}} sua conta corrente.
+      </p>
+    </div>
+
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+      @if(signupMode()) {
+        <mat-form-field>
+          <mat-label>Nome</mat-label>
+          <input
+            matInput
+            formControlName="username"
+            required
+          />
+          @if (form.controls.username.invalid && (form.controls.username.dirty || form.controls.username.touched)) {
+            <mat-error>Nome é obrigatório</mat-error>
+          }
+        </mat-form-field>
+      }
+      
+      <mat-form-field>
+        <mat-label>Email</mat-label>
+        <input
+          matInput
+          placeholder="user@example.com"
+          formControlName="email"
+          required
+        />
+        @if (form.controls.email.getError('required') && (form.controls.email.dirty || form.controls.email.touched)) {
+          <mat-error>Email é obrigatório</mat-error>
+        }
+        @if (form.controls.email.getError('pattern') && (form.controls.email.dirty || form.controls.email.touched)) {
+          <mat-error>Por favor, informe um email válido <i>Ex.: {{"usuário@exemplo.com"}}</i></mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Senha</mat-label>
+        <input 
+          matInput 
+          [attr.type]="showPassword() ? 'text' : 'password'" 
+          formControlName="password"
+        />
+        <button
+          mat-icon-button
+          matSuffix
+          type="button"
+          (click)="togglePassword()"
+          [attr.aria-label]="'Hide password'"
+        >
+          <mat-icon>{{showPassword() ? 'visibility_off' : 'visibility'}}</mat-icon>
+        </button>
+        @if (form.controls.password.invalid && (form.controls.password.dirty || form.controls.password.touched)) {
+          <mat-error>Insira uma senha válida</mat-error>
+        }
+      </mat-form-field>
+      <!-- <mat-checkbox class="checkbox" formControlName="agree">
+        <small>
+          Li e estou ciente quanto às condições de tratamento dos meus 
+          dados conforme descrito na Política de Privacidade do banco.
+        </small>
+      </mat-checkbox>
+      @if (form.controls.agree.invalid && (form.controls.agree.dirty || form.controls.agree.touched)) {
+        <mat-error><small>Aceite os termos para continuar</small></mat-error>
+      } -->
+      <mat-dialog-actions>
+        <button mat-button class="action-btn cancel" (click)="onCancelClick()">Cancelar</button>
+        <button 
+          mat-button 
+          cdkFocusInitial 
+          class="action-btn save" 
+          type="submit"
+        >
+          {{signupMode() ? 'Criar conta' : 'Acessar'}}
+        </button>
+      </mat-dialog-actions>
+    </form>
+  </div>
+</mat-dialog-content>

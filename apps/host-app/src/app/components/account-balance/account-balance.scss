@@ -1,0 +1,33 @@
+.balance-card {
+  background-color: #00995d;
+  color: white;
+  border-radius: 8px;
+  padding: 1rem;
+
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .left {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .date {
+      font-weight: 600;
+    }
+  }
+
+  .value {
+    font-size: 1.8rem;
+    font-weight: bold;
+    margin-top: 0.5rem;
+  }
+
+  button.mat-icon-button {
+    color: white;
+  }
+}
+

@@ -1,0 +1,21 @@
+<mat-card class="balance-card">
+  <div class="header">
+    <div class="left">
+      <span>Saldo</span>
+      <span (click)="toggleBalanceVisibility()">
+        <mat-icon fontSet="material-symbols-outlined">
+          {{ showBalance ? "visibility_off" : "visibility" }}
+        </mat-icon>
+      </span>
+    </div>
+    <span class="date">{{ formattedCurrentDate }}</span>
+  </div>
+
+  <div class="value">
+    {{
+      showBalance
+        ? "R$ " + balance.toLocaleString("pt-BR", { minimumFractionDigits: 2 })
+        : "••••••"
+    }}
+  </div>
+</mat-card>

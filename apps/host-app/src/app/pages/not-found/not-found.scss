@@ -1,0 +1,60 @@
+@import '../../../assets/styles/imports';
+
+.not-found {
+  @include flex-column(space-between, stretch);
+  min-height: 100vh;
+  background: $home-gradient-bg;
+
+  app-navbar {
+    flex: 0 0 auto;
+  }
+
+  .main {
+    @include flex-column(center, center, 4rem);
+    padding: 2rem 4.5rem;
+    overflow-y: auto;
+
+    section {
+      width: 100%;
+
+      &.description {
+        @include flex-column(center, center, $gap-large);
+
+        p {
+          font-weight: 600;
+          font-size: $body-large;
+          margin: 0;
+        }
+
+        small {
+          text-align: center;
+        }
+
+        a {
+          cursor: pointer;
+          background: $orange-500;
+          text-decoration: none;;
+          border-radius: $border-radius-medium;
+          padding: $padding-small;
+          color: $white;
+
+          &:hover {
+            background-color: $orange-600;
+          }
+        }
+      }
+
+      &.image {
+        text-align: center;
+        img {
+          width: 25%;
+        }
+      }
+
+    }
+  }
+
+  app-footer {
+    flex: 0 0 auto;
+  }
+}

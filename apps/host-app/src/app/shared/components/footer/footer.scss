@@ -1,0 +1,77 @@
+@import '../../../../assets/styles/imports';
+
+footer {
+  height: 7rem;
+  background-color: $gray-700;
+  padding: $padding-2x-large 0;
+  color: $white;
+
+  @media (max-width: 720px) {
+    height: 100%;
+  }
+
+  .footer-content {
+    @include flex-row(space-between, stretch);
+    width: 80%;
+    margin: 0 auto;
+    font-size: $body-medium;
+
+    @media (max-width: 720px) {
+      @include flex-column(flex-start, flex-start, $gap-extra-large);
+      width: 50%;
+      height: 100%;
+      margin: 0 auto;
+    }
+
+    .section-title {
+      font-weight: bold;
+      margin-bottom: $margin-medium;
+    }
+
+    .links a:hover {
+      color: $primary-100;
+    }
+
+    nav {
+      ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+
+        li {
+          margin-bottom: 0.5rem;
+
+          &:last-child {
+            margin-bottom: 0;
+          }
+
+          a {
+            text-decoration: none;
+            font-weight: 100;
+    
+            &:hover {
+              cursor: pointer;
+            }
+          }
+        }
+      }
+    }
+
+    .copy {
+      @include flex-column(space-between, center, $gap-large);
+
+      p {
+        margin: 0;
+      }
+
+      .social-icons {
+        @include flex-row(center, center, $gap-extra-large);
+        width: 100%;
+
+        img {
+          width: 1.75rem;
+        }
+      }
+    }
+  }
+}

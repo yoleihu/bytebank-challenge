@@ -1,0 +1,47 @@
+<!-- eslint-disable @angular-eslint/template/interactive-supports-focus -->
+<!-- eslint-disable @angular-eslint/template/click-events-have-key-events -->
+<div class="home">
+  <app-navbar></app-navbar>
+  <div class="main">
+    <section class="introduction">
+      <span>
+        Experimente mais liberdade no controle da sua vida financeira. 
+        <br>
+        Crie sua conta com a gente!
+      </span>
+      <img src="assets/images/banner.png" alt="Banner">
+    </section>
+    @if(isMobile()) {
+      <section class="actions-login">
+        <a (click)="openAccountDialog(true)">Abrir conta</a>
+        <a (click)="openAccountDialog(false)">Já tenho conta</a>
+      </section>
+    }
+    <section class="advantages">
+      <span>Vantagens do nosso banco:</span>
+      <div class="advantages-items">
+        <div class="item">
+          <img src="assets/icons/present.svg" alt="Present">
+          <p>Conta e cartão gratuitos</p>
+          <small>Isso mesmo, nossa conta é digital, sem custo fixo e mais que isso: sem tarifa de manutenção.</small>
+        </div>
+        <div class="item">
+          <img src="assets/icons/withdrawal.svg" alt="Present">
+          <p>Saques sem custo</p>
+          <small>Você pode sacar gratuitamente 4x por mês de qualquer Banco 24h.</small>
+        </div>
+        <div class="item">
+          <img src="assets/icons/points.svg" alt="Present">
+          <p>Programa de pontos</p>
+          <small>Você pode acumular pontos com suas compras no crédito sem pagar mensalidade!</small>
+        </div>
+        <div class="item">
+          <img src="assets/icons/devices.svg" alt="Present">
+          <p>Seguro Dispositivos</p>
+          <small>Seus dispositivos móveis (computador e laptop) protegidos por uma mensalidade simbólica.</small>
+        </div>
+      </div>
+    </section>
+  </div>
+  <app-footer></app-footer>
+</div>

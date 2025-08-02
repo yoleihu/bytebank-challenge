@@ -1,0 +1,50 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+h2 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #333;
+}
+
+p {
+  font-size: 1rem;
+  margin-bottom: 24px;
+  color: #555;
+}
+
+.dialog-actions {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+
+  button {
+    min-width: 100px;
+    font-weight: 500;
+    border-radius: 6px;
+  }
+
+  button:first-child {
+    background-color: #f1f1f1;
+    color: #333;
+  }
+
+  button:last-child {
+    color: white;
+  }
+}
+
+::ng-deep .mat-dialog-container {
+  border-radius: 12px;
+  padding: 32px 24px !important;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+  overflow: hidden !important;
+  text-align: center;
+}

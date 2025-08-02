@@ -1,0 +1,50 @@
+<mat-card class="new-transaction-form">
+  <h3 class="title">Nova Transação</h3>
+
+  <mat-form-field appearance="outline" class="full-width">
+    <mat-label>Tipo de transação:</mat-label>
+    <mat-select [(ngModel)]="transactionType">
+      <mat-option [value]="'Received'">Depósito</mat-option>
+      <mat-option [value]="'Sent'">Transferência</mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline" class="input-middle">
+    <mat-label>Valor:</mat-label>
+    <input matInput type="text" mask="separator.2" thousandSeparator="." decimalMarker="," prefix="R$ "
+      [ngModel]="amount" (ngModelChange)="amount = $event" />
+  </mat-form-field>
+
+  <mat-form-field appearance="outline" class="full-width">
+    <mat-label>Descrição:</mat-label>
+    <input matInput type="text" [(ngModel)]="description" placeholder="Digite uma descrição para a transação"
+      maxlength="100" (input)="onDescriptionChange()" />
+    <mat-hint align="end">{{ description.length || 0 }}/100</mat-hint>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline" class="full-width">
+    <mat-label>Categoria:</mat-label>
+    <input matInput type="text" [value]="category" readonly placeholder="Categoria será detectada automaticamente" />
+    <mat-icon matSuffix *ngIf="isLoadingCategory" class="loading-icon">hourglass_empty</mat-icon>
+    <mat-icon matSuffix *ngIf="!isLoadingCategory && category" class="category-icon">category</mat-icon>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline" class="input-middle">
+    <mat-label>Data</mat-label>
+    <input matInput [matDatepicker]="picker" [(ngModel)]="transactionDate" placeholder="Escolha uma data" />
+    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+    <mat-datepicker #picker></mat-datepicker>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline" class="input-middle" (click)="fileInput.click()" style="cursor: pointer;">
+    <mat-label>Comprovante</mat-label>
+    <input matInput [value]="selectedFileName || ''" readonly placeholder="Clique para anexar um arquivo">
+    <mat-icon matSuffix>attach_file</mat-icon>
+    <input hidden (change)="onFileSelected($event)" #fileInput type="file" />
+  </mat-form-field>
+
+  <button mat-flat-button color="primary" class="submit-btn input-middle"
+    [disabled]="!transactionType || amount === null || !transactionDate || !description" (click)="submitTransaction()">
+    Enviar
+  </button>
+</mat-card>

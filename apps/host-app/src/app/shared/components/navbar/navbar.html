@@ -1,0 +1,92 @@
+@if(isHomePage()) {
+  <mat-toolbar class="home-navbar">
+    @if(!isMobile()) {
+      <div class="nav-content">
+        <div class="bytebank-pages">
+          <div class="logo">
+            <img src="assets/images/logo.png" alt="Bytebank Logo"/>
+          </div>
+          <a routerLink="/sobre">Sobre</a>
+          <a routerLink="/sobre">Serviços</a>
+        </div>
+        <div class="actions-login">
+          <a tabindex="0"
+              (click)="openAccountDialog(true)"
+              (keyup.enter)="openAccountDialog(true)"
+              (keyup.space)="openAccountDialog(true)">
+            Abrir minha conta
+          </a>
+          <a tabindex="0"
+              (click)="openAccountDialog(false)"
+              (keyup.enter)="openAccountDialog(false)"
+              (keyup.space)="openAccountDialog(false)">
+            Já tenho conta
+          </a>
+        </div>
+      </div>
+    } @else {
+      <div class="nav-content">
+        <button mat-icon-button (click)="toggleMenu()">
+          <mat-icon fontIcon="menu">menu</mat-icon>
+        </button>
+        <div class="logo">
+          <img src="assets/images/logo.png" alt="Bytebank Logo"/>
+        </div>
+      </div>
+    }
+  </mat-toolbar>
+} @else {
+  <mat-toolbar class="navbar">
+    <!-- Botão de toggle do sidebar (apenas mobile) -->
+    <button 
+      mat-icon-button 
+      class="sidebar-toggle-btn" 
+      (click)="toggleSidebar()"
+      *ngIf="isMobile()">
+      <mat-icon>{{ isSidebarOpen() ? 'menu_open' : 'menu' }}</mat-icon>
+    </button>
+
+    <div class="logo">
+      <img src="assets/images/logo.png" alt="Bytebank Logo" />
+    </div>
+
+    <span class="spacer"></span>
+
+    <!-- Menu do usuário -->
+    <div class="user-menu">
+      <button mat-icon-button [matMenuTriggerFor]="userMenu" class="user-avatar-btn">
+        <img src="assets/images/avatar.png" alt="User" class="avatar" />
+      </button>
+      <mat-menu #userMenu="matMenu" class="user-dropdown">
+        <button mat-menu-item>
+          <mat-icon>person</mat-icon>
+          <span>Meu Perfil</span>
+        </button>
+        <button mat-menu-item>
+          <mat-icon>settings</mat-icon>
+          <span>Configurações</span>
+        </button>
+        <mat-divider></mat-divider>
+        <button mat-menu-item (click)="logout()">
+          <mat-icon>logout</mat-icon>
+          <span>Sair</span>
+        </button>
+      </mat-menu>
+    </div>
+  </mat-toolbar>
+}
+
+@if(isMenuOpen()) {
+  <div class="side-menu-backdrop"
+       tabindex="0"
+       (click)="toggleMenu()"
+       (keyup.enter)="toggleMenu()"
+       (keyup.space)="toggleMenu()"></div>
+  <nav class="side-menu">
+    <button mat-icon-button class="close-btn" (click)="toggleMenu()">
+      <mat-icon>close</mat-icon>
+    </button>
+    <a routerLink="/sobre" (click)="toggleMenu()">Sobre</a>
+    <a routerLink="/sobre" (click)="toggleMenu()">Serviços</a>
+  </nav>
+}

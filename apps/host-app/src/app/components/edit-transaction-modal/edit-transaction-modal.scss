@@ -1,0 +1,56 @@
+:host {
+  display: block;
+  padding: 24px;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+h2 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 24px;
+  font-family: 'Segoe UI', sans-serif;
+  color: #333;
+}
+
+mat-form-field {
+  width: 100%;
+  margin-bottom: 16px;
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 24px;
+
+  button {
+    min-width: 100px;
+    font-weight: 500;
+    color: white;
+  }
+
+  button:first-child {
+    background-color: #f1f1f1;
+    color: #333;
+    margin-right: 8px;
+  }
+}
+
+::ng-deep .mat-dialog-container {
+  border-radius: 12px;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.15);
+  padding: 32px 24px !important;
+}
+
+.container-infos {
+  display: flex;
+  justify-content: space-between;
+
+  .input-middle{
+    width: 45%;
+  }
+}
+
+.category-icon {
+  color: #00995d;
+}

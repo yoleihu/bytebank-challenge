@@ -1,0 +1,329 @@
+<div class="extract-container" role="main" aria-label="Extrato de transações">
+    <div class="header" style="position: relative;">
+        <h3 class="title" id="extract-title">Extrato</h3>
+        <div class="header-actions">
+            <mat-form-field appearance="outline" class="search-field">
+                <mat-label>Pesquisar transações</mat-label>
+                <input matInput [(ngModel)]="searchTerm" (input)="onSearchChange()"
+                    placeholder="Digite para pesquisar..." aria-label="Campo de pesquisa de transações"
+                    aria-describedby="search-description" />
+                <mat-icon matSuffix aria-hidden="true">search</mat-icon>
+                <button matSuffix mat-icon-button *ngIf="searchTerm" (click)="clearSearch()"
+                    matTooltip="Limpar pesquisa" aria-label="Limpar pesquisa" type="button">
+                    <mat-icon aria-hidden="true">clear</mat-icon>
+                </button>
+            </mat-form-field>
+            <div id="search-description" class="sr-only">
+                Pesquise por descrição, categoria, tipo, valor ou data das transações
+            </div>
+
+            <button mat-icon-button class="filter-button" matTooltip="Filtrar" (click)="openFilterDialog()"
+                aria-label="Abrir filtros de transações" [attr.aria-expanded]="showFilter" aria-controls="filter-panel"
+                type="button">
+                <mat-icon fontSet="material-symbols-outlined" aria-hidden="true">filter_alt</mat-icon>
+            </button>
+        </div>
+
+        <div class="filter-dialog-below" *ngIf="showFilter" id="filter-panel" role="dialog"
+            aria-labelledby="filter-title" aria-describedby="filter-description">
+            <div class="filter-section">
+                <h4 id="filter-title">Filtros de Transações</h4>
+                <div id="filter-description" class="sr-only">
+                    Configure filtros para personalizar a visualização das transações
+                </div>
+
+                <h5>Ordenação</h5>
+                <mat-form-field appearance="fill">
+                    <mat-label>Ordenar por</mat-label>
+                    <mat-select [(ngModel)]="sort" aria-label="Selecionar campo para ordenação">
+                        <mat-option value="date">Data</mat-option>
+                        <mat-option value="amount">Valor</mat-option>
+                        <mat-option value="description">Descrição</mat-option>
+                        <mat-option value="category">Categoria</mat-option>
+                        <mat-option value="type">Tipo</mat-option>
+                    </mat-select>
+                </mat-form-field>
+
+                <mat-form-field appearance="fill">
+                    <mat-label>Ordem</mat-label>
+                    <mat-select [(ngModel)]="order" aria-label="Selecionar ordem de classificação">
+                        <mat-option value="asc">Ascendente</mat-option>
+                        <mat-option value="desc">Descendente</mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+
+            <div class="filter-section">
+                <h5>Tipo de Transação</h5>
+                <div class="filter-options" role="group" aria-labelledby="transaction-type-label">
+                    <div id="transaction-type-label" class="sr-only">Selecionar tipos de transação</div>
+                    <mat-checkbox [(ngModel)]="filters.income" (change)="applyFilter()" aria-label="Incluir depósitos">
+                        Depósitos
+                    </mat-checkbox>
+                    <mat-checkbox [(ngModel)]="filters.expense" (change)="applyFilter()"
+                        aria-label="Incluir transferências">
+                        Transferências
+                    </mat-checkbox>
+                </div>
+            </div>
+
+            <div class="filter-section">
+                <h5>Período</h5>
+                <div class="date-filters">
+                    <mat-form-field appearance="fill">
+                        <mat-label>Data Inicial</mat-label>
+                        <input matInput [matDatepicker]="startPicker" [(ngModel)]="filters.startDate"
+                            (dateChange)="applyFilter()" aria-label="Selecionar data inicial do período">
+                        <mat-datepicker-toggle matSuffix [for]="startPicker"
+                            aria-label="Abrir seletor de data inicial"></mat-datepicker-toggle>
+                        <mat-datepicker #startPicker></mat-datepicker>
+                    </mat-form-field>
+
+                    <mat-form-field appearance="fill">
+                        <mat-label>Data Final</mat-label>
+                        <input matInput [matDatepicker]="endPicker" [(ngModel)]="filters.endDate"
+                            (dateChange)="applyFilter()" aria-label="Selecionar data final do período">
+                        <mat-datepicker-toggle matSuffix [for]="endPicker"
+                            aria-label="Abrir seletor de data final"></mat-datepicker-toggle>
+                        <mat-datepicker #endPicker></mat-datepicker>
+                    </mat-form-field>
+                </div>
+            </div>
+
+            <div class="filter-section">
+                <h5>Valor</h5>
+                <div class="amount-filters">
+                    <mat-form-field appearance="fill">
+                        <mat-label>Valor Mínimo</mat-label>
+                        <input matInput type="number" [(ngModel)]="filters.minAmount" (input)="applyFilter()"
+                            placeholder="0,00" aria-label="Definir valor mínimo das transações">
+                        <span matSuffix aria-label="reais">R$</span>
+                    </mat-form-field>
+
+                    <mat-form-field appearance="fill">
+                        <mat-label>Valor Máximo</mat-label>
+                        <input matInput type="number" [(ngModel)]="filters.maxAmount" (input)="applyFilter()"
+                            placeholder="0,00" aria-label="Definir valor máximo das transações">
+                        <span matSuffix aria-label="reais">R$</span>
+                    </mat-form-field>
+                </div>
+            </div>
+
+            <div class="filter-section">
+                <h5>Categoria</h5>
+                <mat-form-field appearance="fill">
+                    <mat-label>Selecionar Categoria</mat-label>
+                    <mat-select [(ngModel)]="filters.category" (selectionChange)="applyFilter()"
+                        aria-label="Filtrar por categoria">
+                        <mat-option value="">Todas as categorias</mat-option>
+                        <mat-option *ngFor="let category of availableCategories" [value]="category">
+                            {{ category }}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+
+            <div class="filter-section">
+                <h5>Status do Anexo</h5>
+                <div class="filter-options" role="group" aria-labelledby="attachment-status-label">
+                    <div id="attachment-status-label" class="sr-only">Selecionar status dos anexos</div>
+                    <mat-checkbox [(ngModel)]="filters.hasAttachment" (change)="applyFilter()"
+                        aria-label="Mostrar apenas transações com anexo">
+                        Com anexo
+                    </mat-checkbox>
+                    <mat-checkbox [(ngModel)]="filters.noAttachment" (change)="applyFilter()"
+                        aria-label="Mostrar apenas transações sem anexo">
+                        Sem anexo
+                    </mat-checkbox>
+                </div>
+            </div>
+
+            <div class="filter-actions">
+                <button mat-stroked-button color="warn" (click)="clearAllFilters()"
+                    aria-label="Limpar todos os filtros aplicados" type="button">
+                    Limpar Filtros
+                </button>
+                <button mat-raised-button color="primary" (click)="applyFilter()"
+                    aria-label="Aplicar filtros selecionados" type="button">
+                    Aplicar
+                </button>
+                <button mat-stroked-button (click)="showFilter = false" aria-label="Fechar painel de filtros"
+                    type="button">
+                    Fechar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="search-results" *ngIf="searchTerm && filteredTransactions.length > 0" role="region"
+        aria-labelledby="search-results-title">
+        <h4 id="search-results-title">Resultados da pesquisa ({{ filteredTransactions.length }})</h4>
+        <div *ngFor="let t of filteredTransactions; trackBy: trackByTransaction" class="transaction" role="article"
+            [attr.aria-label]="'Transação ' + (t.type === 'income' ? 'de depósito' : 'de transferência') + ' de ' + (getPositiveAmount(t.amount) | number : '1.2-2') + ' reais'">
+            <mat-icon fontSet="material-symbols-outlined" class="icon"
+                [ngClass]="{ income: t.type === 'income', expense: t.type === 'expense' }"
+                [attr.aria-label]="t.type === 'income' ? 'Ícone de depósito' : 'Ícone de transferência'"
+                aria-hidden="true">
+                {{ t.type === "income" ? "call_received" : "call_made" }}
+            </mat-icon>
+
+            <div class="info">
+                <span class="transaction-type"
+                    [attr.aria-label]="'Tipo: ' + (t.type === 'income' ? 'Depósito' : 'Transferência')">
+                    {{ t.type === "income" ? "Depósito" : "Transferência" }}
+                </span>
+                <span class="transaction-description" *ngIf="t.description"
+                    [attr.aria-label]="'Descrição: ' + t.description">
+                    {{ t.description }}
+                </span>
+                <span class="transaction-category" *ngIf="t.category" [attr.aria-label]="'Categoria: ' + t.category">
+                    {{ t.category }}
+                </span>
+                <small class="transaction-date"
+                    [attr.aria-label]="'Data: ' + (t.date | date : 'dd/MM/yyyy' : undefined : 'pt-BR')">
+                    {{ t.date | date : "dd/MM/yyyy" : undefined : "pt-BR" }}
+                </small>
+            </div>
+
+            <div class="amount" [ngClass]="{ income: t.type === 'income', expense: t.type === 'expense' }"
+                [attr.aria-label]="'Valor: ' + (getPositiveAmount(t.amount) | number : '1.2-2') + ' reais'">
+                R$ {{ getPositiveAmount(t.amount) | number : "1.2-2" }}
+            </div>
+
+            <div class="actions" role="group" aria-label="Ações da transação">
+                <button (click)="downloadAttachment(t)" *ngIf="t.anexo?.filename" aria-label="Baixar anexo da transação"
+                    type="button">
+                    <mat-icon class="icon-settings" matTooltip="Download do anexo" fontSet="material-symbols-outlined"
+                        aria-hidden="true">download</mat-icon>
+                </button>
+
+                <button (click)="openEditModal(t)" aria-label="Editar transação" type="button">
+                    <mat-icon class="icon-settings" matTooltip="Editar" fontSet="material-symbols-outlined"
+                        aria-hidden="true">edit</mat-icon>
+                </button>
+
+                <button color="warn" (click)="deleteTransaction(t.id!, t.description!)" aria-label="Excluir transação"
+                    type="button">
+                    <mat-icon class="icon-settings" matTooltip="Excluir" fontSet="material-symbols-outlined"
+                        aria-hidden="true">delete</mat-icon>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div *ngIf="!searchTerm && groupedTransactions.length > 0" role="region" aria-labelledby="extract-title">
+        <div *ngFor="let group of groupedTransactions; trackBy: trackByGroup" role="group"
+            [attr.aria-label]="'Transações de ' + group.month">
+            <h4 [attr.id]="'month-' + group.month">{{ group.month }}</h4>
+
+            <div *ngFor="let t of group.transactions; trackBy: trackByTransaction" class="transaction" role="article"
+                [attr.aria-label]="'Transação ' + (t.type === 'income' ? 'de depósito' : 'de transferência') + ' de ' + (getPositiveAmount(t.amount) | number : '1.2-2') + ' reais'">
+                <mat-icon fontSet="material-symbols-outlined" class="icon"
+                    [ngClass]="{ income: t.type === 'income', expense: t.type === 'expense' }"
+                    [attr.aria-label]="t.type === 'income' ? 'Ícone de depósito' : 'Ícone de transferência'"
+                    aria-hidden="true">
+                    {{ t.type === "income" ? "call_received" : "call_made" }}
+                </mat-icon>
+
+                <div class="info">
+                    <span class="transaction-type"
+                        [attr.aria-label]="'Tipo: ' + (t.type === 'income' ? 'Depósito' : 'Transferência')">
+                        {{ t.type === "income" ? "Depósito" : "Transferência" }}
+                    </span>
+                    <span class="transaction-description" *ngIf="t.description"
+                        [attr.aria-label]="'Descrição: ' + t.description">
+                        {{ t.description }}
+                    </span>
+                    <span class="transaction-category" *ngIf="t.category"
+                        [attr.aria-label]="'Categoria: ' + t.category">
+                        {{ t.category }}
+                    </span>
+                    <small class="transaction-date"
+                        [attr.aria-label]="'Data: ' + (t.date | date : 'dd/MM/yyyy' : undefined : 'pt-BR')">
+                        {{ t.date | date : "dd/MM/yyyy" : undefined : "pt-BR" }}
+                    </small>
+                </div>
+
+                <div class="amount" [ngClass]="{ income: t.type === 'income', expense: t.type === 'expense' }"
+                    [attr.aria-label]="'Valor: ' + (getPositiveAmount(t.amount) | number : '1.2-2') + ' reais'">
+                    R$ {{ getPositiveAmount(t.amount) | number : "1.2-2" }}
+                </div>
+
+                <div class="actions" role="group" aria-label="Ações da transação">
+                    <button (click)="downloadAttachment(t)" *ngIf="t.anexo?.filename"
+                        aria-label="Baixar anexo da transação" type="button">
+                        <mat-icon class="icon-settings" matTooltip="Download do anexo"
+                            fontSet="material-symbols-outlined" aria-hidden="true">download</mat-icon>
+                    </button>
+
+                    <button (click)="openEditModal(t)" aria-label="Editar transação" type="button">
+                        <mat-icon class="icon-settings" matTooltip="Editar" fontSet="material-symbols-outlined"
+                            aria-hidden="true">edit</mat-icon>
+                    </button>
+
+                    <button color="warn" (click)="deleteTransaction(t.id!, t.description!)"
+                        aria-label="Excluir transação" type="button">
+                        <mat-icon class="icon-settings" matTooltip="Excluir" fontSet="material-symbols-outlined"
+                            aria-hidden="true">delete</mat-icon>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="no-results" *ngIf="searchTerm && filteredTransactions.length === 0" role="alert" aria-live="polite">
+        <mat-icon aria-hidden="true">search_off</mat-icon>
+        <h3>Nenhuma transação encontrada</h3>
+        <p>Não encontramos transações para "<strong>{{ searchTerm }}</strong>"</p>
+        <div class="suggestions">
+            <p>Tente:</p>
+            <ul>
+                <li>Verificar a ortografia das palavras</li>
+                <li>Usar termos mais gerais</li>
+                <li>Pesquisar por categoria ou valor</li>
+            </ul>
+        </div>
+        <button mat-stroked-button (click)="clearSearch()" aria-label="Limpar pesquisa e mostrar todas as transações"
+            type="button">
+            Limpar pesquisa
+        </button>
+    </div>
+
+    <div class="no-transactions" *ngIf="!searchTerm && groupedTransactions.length === 0 && allTransactions.length === 0"
+        role="alert" aria-live="polite">
+        <mat-icon aria-hidden="true">account_balance_wallet</mat-icon>
+        <h3>Nenhuma transação encontrada</h3>
+        <p>Você ainda não possui transações registradas.</p>
+        <p>Comece adicionando sua primeira transação!</p>
+        <button mat-raised-button color="primary" routerLink="/dashboard"
+            aria-label="Ir para o dashboard e adicionar primeira transação" type="button">
+            <mat-icon aria-hidden="true">add</mat-icon>
+            Adicionar Transação
+        </button>
+    </div>
+
+    <div class="no-filtered-results"
+        *ngIf="!searchTerm && groupedTransactions.length === 0 && allTransactions.length > 0" role="alert"
+        aria-live="polite">
+        <mat-icon aria-hidden="true">filter_list_off</mat-icon>
+        <h3>Nenhuma transação corresponde aos filtros</h3>
+        <p>Os filtros aplicados não retornaram nenhuma transação.</p>
+        <div class="suggestions">
+            <p>Tente:</p>
+            <ul>
+                <li>Ampliar o período de datas</li>
+                <li>Ajustar os valores mínimo/máximo</li>
+                <li>Selecionar diferentes categorias</li>
+                <li>Incluir ambos os tipos de transação</li>
+            </ul>
+        </div>
+        <button mat-stroked-button (click)="clearAllFilters()"
+            aria-label="Limpar todos os filtros e mostrar todas as transações" type="button">
+            Limpar todos os filtros
+        </button>
+    </div>
+
+    <mat-paginator [length]="totalItems" [pageSize]="10" [pageSizeOptions]="[5, 10, 25, 100]" [pageIndex]="0"
+        [hidePageSize]="true" aria-label="Navegação de páginas do extrato" (page)="handlePageEvent($event)">
+    </mat-paginator>
+</div>

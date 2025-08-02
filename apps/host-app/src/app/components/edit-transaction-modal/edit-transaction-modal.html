@@ -1,0 +1,59 @@
+<h2>Editar Transação</h2>
+
+<mat-form-field class="full-width" appearance="outline">
+  <mat-label>Tipo</mat-label>
+  <mat-select [(ngModel)]="editedTransaction.type">
+    <mat-option value="income">Depósito</mat-option>
+    <mat-option value="expense">Transferência</mat-option>
+  </mat-select>
+</mat-form-field>
+
+<div class="container-infos">
+  <mat-form-field class="input-middle" appearance="outline">
+    <mat-label>Valor</mat-label>
+    <input matInput type="text" mask="separator.2" thousandSeparator="." decimalMarker="," prefix="R$ "
+      [ngModel]="editedTransaction.amount" (ngModelChange)="editedTransaction.amount = $event" />
+  </mat-form-field>
+
+  <mat-form-field class="input-middle" appearance="outline">
+    <mat-label>Data</mat-label>
+    <input matInput [matDatepicker]="picker" [(ngModel)]="editedTransaction.date" placeholder="Escolha uma data" />
+    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+    <mat-datepicker #picker></mat-datepicker>
+  </mat-form-field>
+</div>
+
+<mat-form-field class="full-width" appearance="outline">
+  <mat-label>Descrição</mat-label>
+  <input matInput [(ngModel)]="editedTransaction.description" placeholder="Digite uma descrição para a transação"
+    maxlength="100" />
+  <mat-hint align="end">{{ (editedTransaction.description || '').length }}/100</mat-hint>
+</mat-form-field>
+
+<mat-form-field class="full-width" appearance="outline">
+  <mat-label>Categoria</mat-label>
+  <input 
+    matInput 
+    [value]="editedTransaction.category || 'Não definida'" 
+    readonly 
+    placeholder="Categoria da transação"
+  />
+  <mat-icon matSuffix class="category-icon">category</mat-icon>
+</mat-form-field>
+
+<mat-form-field appearance="outline" class="full-width" (click)="fileInput.click()" style="cursor: pointer;">
+
+  <mat-label>Anexo (Comprovante)</mat-label>
+
+  <input matInput [value]="getAttachmentName()" readonly placeholder="Clique para adicionar ou trocar o anexo">
+
+  <mat-icon matSuffix>attach_file</mat-icon>
+
+  <input hidden (change)="onFileSelected($event)" #fileInput type="file" />
+
+</mat-form-field>
+
+<div class="actions">
+  <button mat-button (click)="cancel()">Cancelar</button>
+  <button mat-flat-button color="primary" (click)="submit()">Salvar</button>
+</div>

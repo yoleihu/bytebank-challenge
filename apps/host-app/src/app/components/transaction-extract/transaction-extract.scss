@@ -1,0 +1,191 @@
+.extract-container {
+  background-color: #f5f5f5;
+  padding: 1rem;
+  border-radius: 8px;
+  width: 100%;
+  max-width: 320px;
+
+  .title {
+    font-size: 1.5rem;
+    font-weight: 500;
+    color: #333;
+    margin-bottom: 1rem;
+    font-family: "Segoe UI", sans-serif;
+  }
+
+  h4 {
+    font-size: 1.3rem;
+    margin-bottom: 0.5rem;
+    color: #00995d;
+  }
+
+  .transaction {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid #f0f0f0;
+    flex-wrap: nowrap;
+
+    .icon {
+      font-size: 20px;
+      flex-shrink: 0;
+    }
+
+    .info {
+      flex: 1;
+      min-width: 0;
+      overflow: hidden;
+
+      .transaction-type {
+        font-weight: 500;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: block;
+        color: #333;
+      }
+
+      .transaction-description {
+        font-size: 0.875rem;
+        color: #666;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: block;
+        margin-top: 0.125rem;
+        font-weight: 400;
+      }
+
+      .transaction-category {
+        font-size: 0.75rem;
+        color: #00995d;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: block;
+        margin-top: 0.125rem;
+        font-weight: 500;
+        background-color: rgba(0, 153, 93, 0.1);
+        padding: 0.125rem 0.375rem;
+        border-radius: 0.25rem;
+        display: inline-block;
+        max-width: fit-content;
+      }
+
+      .transaction-date {
+        display: block;
+        color: #777;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        font-size: 0.75rem;
+        margin-top: 0.125rem;
+      }
+    }
+
+    .amount {
+      font-weight: bold;
+      white-space: nowrap;
+      flex-shrink: 0;
+
+      &.income {
+        color: #00995d;
+      }
+
+      &.expense {
+        color: #d32f2f;
+      }
+    }
+  }
+
+  .actions {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    flex-shrink: 0;
+
+    button {
+      border: none;
+      background: none;
+      padding: 4px;
+      min-width: unset;
+      min-height: unset;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+
+    .icon-settings {
+      font-size: 16px;
+    }
+
+    .icon-settings:hover {
+      color: #eb6a1c;
+    }
+  }
+
+  .see-more {
+    display: block;
+    margin-top: 1rem;
+    text-align: right;
+    font-weight: 500;
+    color: #00995d;
+    cursor: pointer;
+  }
+}
+
+::ng-deep .transaction .mat-icon.income {
+  color: #00995d !important;
+}
+
+::ng-deep .transaction .mat-icon.expense {
+  color: #d32f2f !important;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.title {
+  margin: 0;
+}
+
+.filter-button {
+  border-radius: 50%;
+  background-color: #f0f0f0;
+  margin-left: 10px;
+  height: 40px;
+  width: 40px;
+  cursor: pointer;
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+}
+
+.filter-dialog-below {
+  position: absolute;
+  top: 100%;
+  /* abaixo do botão */
+  right: 0;
+  background: #fff;
+  border-radius: 8px;
+  padding: 1rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  z-index: 99;
+  width: 280px;
+}
+
+.filter-dialog-below .actions {
+  margin-top: 1rem;
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+}

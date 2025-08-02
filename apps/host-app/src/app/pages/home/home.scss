@@ -1,0 +1,137 @@
+@import '../../../assets/styles/imports';
+
+.home {
+  @include flex-column(space-between, stretch);
+  min-height: 100vh;
+  background: $home-gradient-bg;
+
+  app-navbar {
+    flex: 0 0 auto;
+  }
+
+  .main {
+    @include flex-column(space-around, center);
+    // flex: 1 0 0;
+    padding: 2rem 4.5rem;
+    overflow-y: auto;
+
+    section {
+      width: 100%;
+
+      &.introduction {
+        @include flex-row(center, center, $gap-extra-large);
+        flex-wrap: wrap;
+        width: 100%;
+        margin-bottom: $margin-x-large;
+
+        span {
+          flex: 1 1 25%;
+          max-width: 25%;
+          color: $secondary-600;
+          font-weight: 600;
+          font-size: $body-large;
+        }
+
+        img {
+          flex: 1 1 35%;
+          max-width: 35%;
+        }
+
+        @media (max-width: 720px) {
+          flex-direction: column;
+          justify-content: center;
+          span, img {
+            text-align: center;
+            flex: 1 1 100%;
+            max-width: 100%;
+          }
+        }
+      }
+
+      &.actions-login {
+        @include flex-row(center, center, $gap-large);
+        margin-bottom: $margin-x-large;
+      
+        a {
+          cursor: pointer;
+          border: 2px solid $black;
+          border-radius: $border-radius-medium;
+          padding: $padding-small;
+          color: white;
+
+          &:nth-of-type(1) {
+            background: $black;
+            margin-right: $margin-medium;
+            
+            &:hover {
+              background: $gray-600;
+            }
+          }
+
+          &:nth-of-type(2) {
+            color: $black;
+            &:hover {
+              color: $white;
+              background: $gray-600;
+            }
+          }
+        }
+      }
+
+      &.advantages {
+        @include flex-column(space-between, center, $gap-extra-large);
+        max-width: 100%;
+
+        span {
+          color: $secondary-600;
+          font-size: $body-large;
+          font-weight: 600;
+        }
+
+        .advantages-items {
+          @include flex-row(center, flex-start, $gap-extra-large);
+          flex-wrap: wrap;
+          width: 100%;
+
+          .item {
+            @include flex-column(center, center);
+            flex: 1 1 20%; 
+            max-width: 25%; 
+
+            @media (max-width: 900px) {
+              flex: 1 1 45%; 
+              max-width: 50%;
+            }
+
+            @media (max-width: 600px) {
+              flex: 1 1 95%; 
+              max-width: 100%;
+            }
+
+            img {
+              width: 4rem;
+              height: 4rem;
+            }
+
+            p {
+              color: $green-500;
+              margin: 0;
+              font-weight: 700;
+              font-size: $body-medium;
+            }
+
+            small {
+              color: $gray-400;
+              text-align: center;
+              font-size: $body-small;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  app-footer {
+    flex: 0 0 auto;
+  }
+}
