@@ -16,7 +16,7 @@
     "baseUrl": ".",
     "paths": {
       "resume_account_mf/Routes": [
-        "resume-account-mf/src/app/remote-entry/entry.routes.ts"
+        "apps/resume-account-mf/src/app/remote-entry/entry.routes.ts"
       ]
     }
   },

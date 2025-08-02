@@ -9,12 +9,13 @@ export const remoteRoutes: Route[] = [
       {
         path: '',
         redirectTo: 'dashboard',
-        pathMatch: 'full'
+        pathMatch: 'full',
       },
       {
         path: 'dashboard',
-        loadComponent: () => import('../dashboard/dashboard').then(m => m.Dashboard)
-      }
-    ]
-  }
+        loadComponent: () =>
+          import('../dashboard/dashboard').then((m) => m.Dashboard),
+      },
+    ],
+  },
 ];

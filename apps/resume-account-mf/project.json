@@ -1,30 +1,30 @@
 {
   "name": "resume-account-mf",
-  "$schema": "../node_modules/nx/schemas/project-schema.json",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "projectType": "application",
   "prefix": "app",
-  "sourceRoot": "resume-account-mf/src",
+  "sourceRoot": "apps/resume-account-mf/src",
   "tags": [],
   "targets": {
     "build": {
       "executor": "@nx/angular:webpack-browser",
       "outputs": ["{options.outputPath}"],
       "options": {
-        "outputPath": "dist/resume-account-mf/browser",
-        "index": "resume-account-mf/src/index.html",
-        "main": "resume-account-mf/src/main.ts",
+        "outputPath": "dist/apps/resume-account-mf/browser",
+        "index": "apps/resume-account-mf/src/index.html",
+        "main": "apps/resume-account-mf/src/main.ts",
         "polyfills": ["zone.js"],
-        "tsConfig": "resume-account-mf/tsconfig.app.json",
+        "tsConfig": "apps/resume-account-mf/tsconfig.app.json",
         "inlineStyleLanguage": "scss",
         "assets": [
           {
             "glob": "**/*",
-            "input": "resume-account-mf/public"
+            "input": "apps/resume-account-mf/public"
           }
         ],
-        "styles": ["resume-account-mf/src/styles.scss"],
+        "styles": ["apps/resume-account-mf/src/styles.scss"],
         "customWebpackConfig": {
-          "path": "resume-account-mf/webpack.config.ts"
+          "path": "apps/resume-account-mf/webpack.config.ts"
         }
       },
       "configurations": {
@@ -43,7 +43,7 @@
           ],
           "outputHashing": "all",
           "customWebpackConfig": {
-            "path": "resume-account-mf/webpack.prod.config.ts"
+            "path": "apps/resume-account-mf/webpack.prod.config.ts"
           }
         },
         "development": {
@@ -87,7 +87,7 @@
       "executor": "@nx/vite:test",
       "outputs": ["{options.reportsDirectory}"],
       "options": {
-        "reportsDirectory": "../coverage/resume-account-mf"
+        "reportsDirectory": "../../coverage/apps/resume-account-mf"
       }
     },
     "serve-static": {
@@ -112,9 +112,9 @@
       "dependsOn": ["build"],
       "executor": "@angular-devkit/build-angular:server",
       "options": {
-        "outputPath": "dist/resume-account-mf/server",
-        "main": "resume-account-mf/src/server.ts",
-        "tsConfig": "resume-account-mf/tsconfig.server.json",
+        "outputPath": "dist/apps/resume-account-mf/server",
+        "main": "apps/resume-account-mf/src/server.ts",
+        "tsConfig": "apps/resume-account-mf/tsconfig.server.json",
         "inlineStyleLanguage": "scss"
       },
       "configurations": {
