@@ -1,11 +1,6 @@
 <!-- eslint-disable @angular-eslint/template/click-events-have-key-events -->
 <!-- Overlay para fechar o sidebar no mobile -->
-<div 
-  class="sidebar-overlay" 
-  [class.active]="isOpen && isMobile" 
-  (click)="closeSidebar()"
-  tabindex="0"
->
+<div class="sidebar-overlay" [class.active]="isOpen && isMobile" (click)="closeSidebar()" tabindex="0">
 </div>
 
 <nav class="sidebar" [class.open]="isOpen" [class.mobile]="isMobile">
@@ -25,6 +20,10 @@
     <a mat-list-item routerLink="/extract" (click)="closeSidebar()" class="nav-item">
       <mat-icon class="material-symbols-outlined"> receipt_long </mat-icon>
       <span>Extrato</span>
+    </a>
+    <a mat-list-item routerLink="/resume-account-mf" (click)="closeSidebar()" class="nav-item">
+      <mat-icon class="material-symbols-outlined">dashboard</mat-icon>
+      <span>Dashboard</span>
     </a>
     <a mat-list-item routerLink="/transferencias" (click)="closeSidebar()" class="nav-item">
       <mat-icon class="material-symbols-outlined"> wallet </mat-icon>
