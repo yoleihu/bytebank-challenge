@@ -21,6 +21,7 @@
     "@angular/router": "~20.1.0",
     "@angular/ssr": "~20.1.0",
     "@nx/angular": "21.3.11",
+    "chart.js": "^4.5.0",
     "express": "^4.21.2",
     "lodash": "^4.17.21",
     "ngx-mask": "^19.0.7",
