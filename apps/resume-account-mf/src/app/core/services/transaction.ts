@@ -1,7 +1,7 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable, Subject, tap } from 'rxjs';
-
+import { environment } from '../../../environments/environment';
 interface CategorySuggestion {
   detectedCategory: string;
   suggestions: string[];
@@ -18,7 +18,7 @@ interface CategorySuggestionResponse {
   providedIn: 'root',
 })
 export class TransactionService {
-  private apiUrl = 'http://localhost:3000';
+  private apiUrl = environment.apiUrl;
   private transactionsChanged = new Subject<void>();
 
   private http = inject(HttpClient);
