@@ -1,5 +1,5 @@
 import { withModuleFederation } from '@nx/module-federation/angular';
-import config from './module-federation.config';
+import config from './module-federation.prod.config';
 
 /**
  * DTS Plugin is disabled in Nx Workspaces as Nx already provides Typing support for Module Federation
