@@ -1,5 +1,5 @@
 export const environment = {
   production: true,
-  apiUrl: process.env['NG_APP_API_URL'],
-  mfUrl: process.env['NG_APP_MF_URL']
+  apiUrl: 'https://bytebank-backend-production-ee71.up.railway.app',
+  mfUrl: 'https://bytebank-challenge-mf.vercel.app'
 }; 
