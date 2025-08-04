@@ -1,82 +1,180 @@
-# BytebankChallenge
+# ByteBank | FIAP Challenge - Frontend
 
-<a alt="Nx logo" href="https://nx.dev" target="_blank" rel="noreferrer"><img src="https://raw.githubusercontent.com/nrwl/nx/master/images/nx-logo.png" width="45"></a>
+Um sistema para gerenciamento bancário desenvolvido com arquitetura de microfrontends usando Angular e Module Federation.
 
-✨ Your new, shiny [Nx workspace](https://nx.dev) is almost ready ✨.
+## 🚀 Tecnologias
 
-[Learn more about this workspace setup and its capabilities](https://nx.dev/getting-started/tutorials/angular-monorepo-tutorial?utm_source=nx_project&amp;utm_medium=readme&amp;utm_campaign=nx_projects) or run `npx nx graph` to visually explore what was created. Now, let's get you up to speed!
+- **Angular 20+** - Framework principal
+- **Nx Workspace** - Gerenciamento de monorepo
+- **Module Federation** - Arquitetura de microfrontends
+- **TypeScript** - Linguagem de programação
+- **SCSS** - Pré-processador CSS
+- **Docker** - Containerização
+- **Nginx** - Servidor web para produção
 
-## Finish your CI setup
+## 🏗️ Arquitetura de Microfrontends
 
-[Click here to finish setting up your workspace!](https://cloud.nx.app/connect/Rk47Z8ud87)
+O projeto utiliza **Module Federation** para implementar uma arquitetura de microfrontends:
 
+### Aplicações
 
-## Run tasks
+1. **Host App** (`host-app`)
+   - Aplicação principal que atua como shell
+   - Gerencia o roteamento principal
+   - Carrega os microfrontends remotos
+   - Porta: `4200`
 
-To run the dev server for your app, use:
+2. **Resume Account MF** (`resume-account-mf`)
+   - Microfrontend responsável pelo resumo de conta
+   - Funcionalidades de dashboard e visualização de dados
+   - Carregado dinamicamente pelo Host App
+   - Porta: `4201`
 
-```sh
-npx nx serve host-app
+## 🛠️ Como Executar
+
+### Pré-requisitos
+
+Para executar o projeto completo, você precisa do **repositório do backend**:
+
+📁 **Backend Repository**: [bytebank-backend](https://github.com/GiovannaMelo/bytebank-backend)
+
+Clone o repositório do backend em uma pasta separada:
+```bash
+git clone https://github.com/GiovannaMelo/bytebank-backend.git
 ```
 
-To create a production bundle:
+### Desenvolvimento Local
 
-```sh
-npx nx build host-app
+#### Frontend (apenas microfrontends):
+Para executar todos os microfrontends simultaneamente:
+
+```bash
+npm run serve:all
 ```
 
-To see all available targets to run for a project, run:
+Este comando irá:
+- Iniciar o Host App na porta `4200`
+- Iniciar o Resume Account MF na porta `4201`
+- Configurar automaticamente a comunicação entre os microfrontends
 
-```sh
-npx nx show project host-app
+Acesse a aplicação em: http://localhost:4200
+
+#### Backend (executar separadamente):
+No repositório do backend:
+```bash
+cd bytebank-backend
+npm install
+npm start
 ```
 
-These targets are either [inferred automatically](https://nx.dev/concepts/inferred-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) or defined in the `project.json` or `package.json` files.
+O backend ficará disponível em: http://localhost:3000
 
-[More about running tasks in the docs &raquo;](https://nx.dev/features/run-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+### Docker (Stack Completa)
 
-## Add new projects
+Para executar todo o sistema (frontend + backend + banco) via Docker:
 
-While you could add new projects to your workspace manually, you might want to leverage [Nx plugins](https://nx.dev/concepts/nx-plugins?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) and their [code generation](https://nx.dev/features/generate-code?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) feature.
+#### 1. Configure o caminho do backend no docker-compose.yml:
+Ajuste a linha `context` no serviço `backend-api` para apontar para o caminho correto do seu repositório backend.
 
-Use the plugin's generator to create new projects.
-
-To generate a new application, use:
-
-```sh
-npx nx g @nx/angular:app demo
+#### 2. Subir todos os serviços:
+```bash
+docker compose up --build
 ```
 
-To generate a new library, use:
-
-```sh
-npx nx g @nx/angular:lib mylib
+#### 3. Derrubar todos os serviços:
+```bash
+docker compose down
 ```
 
-You can use `npx nx list` to get a list of installed plugins. Then, run `npx nx list <plugin-name>` to learn about more specific capabilities of a particular plugin. Alternatively, [install Nx Console](https://nx.dev/getting-started/editor-setup?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) to browse plugins and generators in your IDE.
+#### Serviços disponíveis no Docker:
+- **Frontend Host**: http://localhost:4200
+- **Microfrontend**: http://localhost:4201
+- **Backend API**: http://localhost:3000
+- **MongoDB**: localhost:27017
 
-[Learn more about Nx plugins &raquo;](https://nx.dev/concepts/nx-plugins?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) | [Browse the plugin registry &raquo;](https://nx.dev/plugin-registry?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+## 📁 Estrutura do Projeto
 
+```
+bytebank-challenge/
+├── apps/
+│   ├── host-app/                    # Aplicação principal
+│   │   ├── src/
+│   │   │   ├── app/                # Componentes e serviços
+│   │   │   ├── environments/       # Configurações de ambiente
+│   │   │   └── ...
+│   │   ├── module-federation.config.ts
+│   │   └── project.json
+│   │
+│   └── resume-account-mf/           # Microfrontend de análise de conta
+│       ├── src/
+│       ├── module-federation.config.ts
+│       └── project.json
+│
+├── docker-compose.yml              # Orquestração Docker
+├── Dockerfile                      # Build da aplicação
+├── nginx.conf                      # Configuração Nginx
+├── package.json                    # Dependências
+└── nx.json                         # Configuração Nx
+```
 
-[Learn more about Nx on CI](https://nx.dev/ci/intro/ci-with-nx#ready-get-started-with-your-provider?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+## 🔧 Scripts Disponíveis
 
-## Install Nx Console
+```bash
+# Desenvolvimento
+npm run serve:all           # Executa todos os microfrontends
+npm run serve:host          # Executa apenas o host app
+npm run serve:mf            # Executa apenas o microfrontend
 
-Nx Console is an editor extension that enriches your developer experience. It lets you run tasks, generate code, and improves code autocompletion in your IDE. It is available for VSCode and IntelliJ.
+# Build
+npm run build:all           # Build de todas as aplicações
+npm run build:host          # Build do host app
+npm run build:mf            # Build do microfrontend
 
-[Install Nx Console &raquo;](https://nx.dev/getting-started/editor-setup?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+```
 
-## Useful links
+## 🐳 Docker
 
-Learn more:
+O projeto inclui configuração completa para Docker com:
 
-- [Learn more about this workspace setup](https://nx.dev/getting-started/tutorials/angular-monorepo-tutorial?utm_source=nx_project&amp;utm_medium=readme&amp;utm_campaign=nx_projects)
-- [Learn about Nx on CI](https://nx.dev/ci/intro/ci-with-nx?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [Releasing Packages with Nx release](https://nx.dev/features/manage-releases?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [What are Nx plugins?](https://nx.dev/concepts/nx-plugins?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+- **Multi-stage build** para otimização de imagem
+- **Nginx** configurado com CORS para Module Federation
+- **Docker Compose** para orquestração completa
+- **Volumes** para persistência de dados
 
-And join the Nx community:
-- [Discord](https://go.nx.dev/community)
-- [Follow us on X](https://twitter.com/nxdevtools) or [LinkedIn](https://www.linkedin.com/company/nrwl)
-- [Our Youtube channel](https://www.youtube.com/@nxdevtools)
-- [Our blog](https://nx.dev/blog?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+### Configuração Docker
+
+#### 1. Estrutura de pastas recomendada:
+```
+projetos/
+├── bytebank-challenge/          # Este repositório (frontend)
+└── bytebank-backend/            # Repositório do backend
+```
+
+#### 2. Ajustar docker-compose.yml:
+No arquivo `docker-compose.yml`, ajuste o caminho do backend:
+```yaml
+backend-api:
+  build:
+    context: ../bytebank-backend  # Ajuste este caminho
+```
+
+### Arquivos Docker:
+- `Dockerfile` - Build das aplicações Angular
+- `docker-compose.yml` - Orquestração de todos os serviços
+- `nginx.conf` - Configuração do servidor web
+
+## 🌐 Integração com Backend
+
+O frontend integra com a API ByteBank Backend através de:
+
+- **Serviços Angular** para comunicação HTTP
+- **Configuração de CORS** para desenvolvimento
+- **Environment variables** para URLs da API
+- **Autenticação JWT** para rotas protegidas
+
+## 📝 Notas de Desenvolvimento
+
+- O projeto utiliza **Nx** para gerenciamento de monorepo
+- **Module Federation** permite desenvolvimento independente dos microfrontends
+- **Environment files** são automaticamente substituídos durante o build
+- **Docker** está configurado para produção com otimizações
