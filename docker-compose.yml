@@ -8,48 +8,42 @@ services:
     ports:
       - "4200:80"
     depends_on:
-      - resume-account-mf # Garante que o remoto suba antes
+      - resume-account-mf
 
-  # Serviço para o Microfrontend Remoto
+  # Serviço para o Microfrontend
   resume-account-mf:
     build:
       context: .
       dockerfile: Dockerfile.remoto
     container_name: bytebank-resume-account-mf
-    # NÃO precisamos expor a porta para o host, apenas para o host-app
-    # Mas para depurar, podemos expor:
+
     ports:
       - "4201:80"
 
-  # --- SERVIÇO DO BACKEND ---
+  # Serviço para Backend
   backend-api:
     build:
-      # O 'context' aponta para a pasta do seu backend
       context: /home/watermelon/Documentos/pessoal/bytebank-backend
-      dockerfile: Dockerfile # O nome do Dockerfile lá dentro
+      dockerfile: Dockerfile
     container_name: bytebank-backend
     ports:
       - "3000:3000"
     environment:
-      # Variáveis de ambiente para o backend
       - MONGODB_URI=mongodb://mongo-db:27017/bytebank
-      - JWT_SECRET=seu_super_segredo_aqui # Troque por um segredo real
+      - JWT_SECRET=seu_super_segredo_aqui
     volumes:
-      # Mapeia a pasta de uploads local para a do contêiner para persistência
       - /home/watermelon/Documentos/pessoal/bytebank-backend/uploads:/usr/src/app/uploads
     depends_on:
-      - mongo-db # Garante que o banco de dados suba antes da API
+      - mongo-db
 
-  # --- SERVIÇO DO BANCO DE DADOS ---
+  # Serviço para o Banco de Dados
   mongo-db:
-    image: mongo:latest # Usa uma imagem oficial do MongoDB
+    image: mongo:latest
     container_name: bytebank-mongodb
     ports:
-      - "27017:27017" # Expõe a porta do MongoDB (útil para debug)
+      - "27017:27017" 
     volumes:
-      # Cria um volume nomeado para persistir os dados do banco
       - mongo-data:/data/db
 
-# Define o volume nomeado
 volumes:
   mongo-data:
