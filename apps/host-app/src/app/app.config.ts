@@ -12,6 +12,12 @@ import {
   withEventReplay,
 } from '@angular/platform-browser';
 import { authInterceptor } from '@core/interceptors/auth.interceptor';
+import { provideStoreDevtools } from '@ngrx/store-devtools';
+import { provideStore } from '@ngrx/store';
+import { provideState } from '@ngrx/store';
+import { balanceReducer } from './state/balance/reducer';
+import { BalanceEffects } from './state/balance/effects';
+import { provideEffects } from '@ngrx/effects';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -20,6 +26,10 @@ export const appConfig: ApplicationConfig = {
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(appRoutes),
     provideHttpClient(withFetch(), withInterceptors([authInterceptor])),
-    provideAnimations(), // Necessário para MatDialog
+    provideAnimations(), // Necessário para MatDialog,
+    provideStore(),
+    provideStoreDevtools(),
+    provideState('balance', balanceReducer),
+    provideEffects([BalanceEffects]),
   ],
 };

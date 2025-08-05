@@ -80,11 +80,15 @@ export class NewTransaction {
       .pipe(
         debounceTime(500), // Aguarda 500ms após o usuário parar de digitar
         distinctUntilChanged(), // Só executa se o valor mudou
-        switchMap(description => {
+        switchMap((description) => {
           if (description.trim() && this.transactionType) {
             this.isLoadingCategory = true;
-            const type = this.transactionType === 'Received' ? 'income' : 'expense';
-            return this.transactionService.getCategorySuggestions(description.trim(), type);
+            const type =
+              this.transactionType === 'Received' ? 'income' : 'expense';
+            return this.transactionService.getCategorySuggestions(
+              description.trim(),
+              type
+            );
           }
           return [];
         })
@@ -99,7 +103,7 @@ export class NewTransaction {
         error: (error) => {
           this.isLoadingCategory = false;
           console.error('Erro ao buscar categoria:', error);
-        }
+        },
       });
   }
 
@@ -125,11 +129,13 @@ export class NewTransaction {
   }
 
   isFormValid(): boolean {
-    return !!(this.transactionType &&
+    return !!(
+      this.transactionType &&
       this.amount !== null &&
       this.amount > 0 &&
       this.description.trim() &&
-      !this.showDateError);
+      !this.showDateError
+    );
   }
 
   resetForm(): void {
@@ -161,17 +167,27 @@ export class NewTransaction {
         return;
       }
 
-      const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'application/pdf', 'text/plain'];
+      const allowedTypes = [
+        'image/jpeg',
+        'image/png',
+        'image/gif',
+        'application/pdf',
+        'text/plain',
+      ];
       if (!allowedTypes.includes(file.type)) {
         this.showFileError = true;
-        this.notificationService.showWarningToast('Formato de arquivo não suportado. Use: JPG, PNG, GIF, PDF ou TXT');
+        this.notificationService.showWarningToast(
+          'Formato de arquivo não suportado. Use: JPG, PNG, GIF, PDF ou TXT'
+        );
         event.target.value = '';
         return;
       }
 
       this.selectedFile = file;
       this.selectedFileName = file.name;
-      this.notificationService.showInfoToast(`Arquivo "${file.name}" selecionado`);
+      this.notificationService.showInfoToast(
+        `Arquivo "${file.name}" selecionado`
+      );
     } else {
       this.selectedFile = null;
       this.selectedFileName = null;
@@ -185,7 +201,11 @@ export class NewTransaction {
 
     this.isSubmitting = true;
 
-    if (this.transactionType && this.amount !== null && this.description.trim()) {
+    if (
+      this.transactionType &&
+      this.amount !== null &&
+      this.description.trim()
+    ) {
       const transaction: Transaction = {
         accountId: localStorage.getItem('accountId') ?? '0',
         type: this.transactionType === 'Received' ? 'income' : 'expense',
@@ -199,20 +219,23 @@ export class NewTransaction {
       this.transactionService.createTransaction(transaction).subscribe({
         next: (response: any) => {
           this.isSubmitting = false;
-          this.notificationService.showSuccessToast('Transação criada com sucesso!');
-          
-          // Verificar se a resposta tem a estrutura esperada
-          const createdTransaction = response.result || response;
-          console.log('Transação criada:', createdTransaction);
+          this.notificationService.showSuccessToast(
+            'Transação criada com sucesso!'
+          );
+          this.resetForm();
+
+          const createdTransaction = response.result;
+
 
           if (this.selectedFile && createdTransaction.id) {
             console.log('Iniciando upload do anexo para transação ID:', createdTransaction.id);
             this.transactionService
               .uploadAttachment(createdTransaction.id, this.selectedFile)
               .subscribe({
-                next: (uploadResponse) => {
-                  console.log('Upload do anexo realizado com sucesso:', uploadResponse);
-                  this.notificationService.showInfoToast('Anexo enviado com sucesso!');
+                next: () => {
+                  this.notificationService.showInfoToast(
+                    'Anexo enviado com sucesso!'
+                  );
                   this.selectedFile = null;
                   this.selectedFileName = null;
                   this.resetForm();
@@ -259,7 +282,9 @@ export class NewTransaction {
 
     if (this.transactionDate && this.transactionDate > new Date()) {
       this.showDateError = true;
-      this.notificationService.showWarningToast('A data da transação não pode ser futura');
+      this.notificationService.showWarningToast(
+        'A data da transação não pode ser futura'
+      );
       isValid = false;
     }
 
@@ -271,10 +296,18 @@ export class NewTransaction {
         isValid = false;
       }
 
-      const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'application/pdf', 'text/plain'];
+      const allowedTypes = [
+        'image/jpeg',
+        'image/png',
+        'image/gif',
+        'application/pdf',
+        'text/plain',
+      ];
       if (!allowedTypes.includes(this.selectedFile.type)) {
         this.showFileError = true;
-        this.notificationService.showWarningToast('Formato de arquivo não suportado. Use: JPG, PNG, GIF, PDF ou TXT');
+        this.notificationService.showWarningToast(
+          'Formato de arquivo não suportado. Use: JPG, PNG, GIF, PDF ou TXT'
+        );
         isValid = false;
       }
     }

@@ -1,9 +1,10 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, computed, signal } from '@angular/core';
 import { CommonModule, CurrencyPipe, DatePipe } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
-import { TransactionService } from '@core/services/transaction';
-import { Transaction } from '@shared/models';
+import { Store } from '@ngrx/store';
+import { loadBalance } from '../../state/balance/actions';
+import { selectBalance, selectBalanceLoading } from '../../state/balance/selectors'; // ajuste o caminho se necessário
 
 @Component({
   selector: 'app-account-balance',
@@ -14,31 +15,14 @@ import { Transaction } from '@shared/models';
   providers: [CurrencyPipe, DatePipe],
 })
 export class AccountBalance implements OnInit {
-  transactionService = inject(TransactionService);
-  
-  balance = 0;
+  private store = inject(Store);
+
+  balance$ = this.store.select(selectBalance);
+  loading$ = this.store.select(selectBalanceLoading);
   showBalance = true;
+
   ngOnInit(): void {
-    this.loadBalance();
-
-    this.transactionService.transactionsChanged$.subscribe(() => {
-      this.loadBalance();
-    });
-  }
-
-  // private loadBalance(): void {
-  //   this.transactionService.getTransactions().subscribe((transactions: Transaction[]) => {
-  //     this.balance = transactions.reduce((total, t) => {
-  //       const amount = Number(t.amount);
-  //       return t.type === 'income' ? total + amount : total - amount;
-  //     }, 0);
-  //   });
-  // }
-
-  private loadBalance(): void {
-    this.transactionService.getBalance().subscribe((response: any) => {
-      this.balance = response.result.balance;
-    });
+    this.store.dispatch(loadBalance());
   }
 
   toggleBalanceVisibility(): void {

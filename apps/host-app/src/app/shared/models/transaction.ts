@@ -22,3 +22,14 @@ export type Attachment = {
   uploadDate?: Date;
   url?: string; // URL para download
 };
+
+export type BalanceResult = {
+  userId: string;
+  balance: number;
+  lastCalculatedAt: string;
+}
+
+export type BalanceResponse = {
+  message: string;
+  result: BalanceResult;
+}

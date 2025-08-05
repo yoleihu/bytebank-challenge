@@ -1,6 +1,6 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { Transaction } from '@shared/models';
+import { Transaction, BalanceResponse } from '@shared/models';
 import { Observable, Subject, tap } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { AuthService } from './auth';
@@ -41,11 +41,11 @@ export class TransactionService {
     return this.http.get<Transaction[]>(url, { params });
   }
 
-  getBalance() {
+  getBalance(): Observable<BalanceResponse> {
     const userId = this.authService.getUserId();
 
     const url = `${this.apiUrl}/account/balance/${userId}`;
-    return this.http.get<Transaction[]>(url, {});
+    return this.http.get<BalanceResponse>(url, {});
   }
 
   getCategorySuggestions(description: string, type: 'income' | 'expense'): Observable<CategorySuggestionResponse> {
