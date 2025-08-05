@@ -200,25 +200,35 @@ export class NewTransaction {
         next: (response: any) => {
           this.isSubmitting = false;
           this.notificationService.showSuccessToast('Transação criada com sucesso!');
-          this.resetForm();
-          const createdTransaction = response.result;
+          
+          // Verificar se a resposta tem a estrutura esperada
+          const createdTransaction = response.result || response;
+          console.log('Transação criada:', createdTransaction);
 
           if (this.selectedFile && createdTransaction.id) {
+            console.log('Iniciando upload do anexo para transação ID:', createdTransaction.id);
             this.transactionService
               .uploadAttachment(createdTransaction.id, this.selectedFile)
               .subscribe({
-                next: () => {
+                next: (uploadResponse) => {
+                  console.log('Upload do anexo realizado com sucesso:', uploadResponse);
                   this.notificationService.showInfoToast('Anexo enviado com sucesso!');
                   this.selectedFile = null;
                   this.selectedFileName = null;
+                  this.resetForm();
                 },
                 error: (err) => {
+                  console.error('Erro no upload do anexo:', err);
                   this.notificationService.showUploadError(err);
+                  this.resetForm();
                 },
               });
+          } else {
+            this.resetForm();
           }
         },
         error: (err) => {
+          console.error('Erro ao criar transação:', err);
           this.isSubmitting = false;
           this.notificationService.showTransactionError(err);
         },

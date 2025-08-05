@@ -16,21 +16,34 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   }
 
   const token = localStorage.getItem('authToken');
+  const isFileUpload = req.body instanceof FormData;
 
   if (token) {
+    const headers: any = {
+      Authorization: `Bearer ${token}`,
+      'Accept': 'application/json'
+    };
+
+    // Não definir Content-Type para uploads de arquivo (deixar o navegador definir automaticamente)
+    if (!isFileUpload) {
+      headers['Content-Type'] = 'application/json';
+    }
+
     req = req.clone({
-      setHeaders: {
-        Authorization: `Bearer ${token}`,
-        'Content-Type': 'application/json',
-        'Accept': 'application/json'
-      }
+      setHeaders: headers
     });
   } else {
+    const headers: any = {
+      'Accept': 'application/json'
+    };
+
+    // Não definir Content-Type para uploads de arquivo
+    if (!isFileUpload) {
+      headers['Content-Type'] = 'application/json';
+    }
+
     req = req.clone({
-      setHeaders: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json'
-      }
+      setHeaders: headers
     });
   }
 

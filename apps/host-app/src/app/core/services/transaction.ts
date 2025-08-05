@@ -83,8 +83,15 @@ export class TransactionService {
 
     const url = `${this.apiUrl}/account/transaction/${transactionId}/attachment`;
 
+    console.log('Upload URL:', url);
+    console.log('Transaction ID:', transactionId);
+    console.log('File:', file.name, file.size, file.type);
+
     return this.http.post(url, formData).pipe(
-      tap(() => this.transactionsChanged.next())
+      tap((response) => {
+        console.log('Upload response:', response);
+        this.transactionsChanged.next();
+      })
     );
   }
 
