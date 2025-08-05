@@ -17,7 +17,8 @@
 
   <mat-form-field class="input-middle" appearance="outline">
     <mat-label>Data</mat-label>
-    <input matInput [matDatepicker]="picker" [(ngModel)]="editedTransaction.date" placeholder="Escolha uma data" />
+    <input matInput [matDatepicker]="picker" [(ngModel)]="selectedDate" (ngModelChange)="onDateChange($event)"
+      placeholder="Escolha uma data" />
     <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
     <mat-datepicker #picker></mat-datepicker>
   </mat-form-field>
@@ -32,12 +33,8 @@
 
 <mat-form-field class="full-width" appearance="outline">
   <mat-label>Categoria</mat-label>
-  <input 
-    matInput 
-    [value]="editedTransaction.category || 'Não definida'" 
-    readonly 
-    placeholder="Categoria da transação"
-  />
+  <input matInput [value]="editedTransaction.category || 'Não definida'" readonly
+    placeholder="Categoria da transação" />
   <mat-icon matSuffix class="category-icon">category</mat-icon>
 </mat-form-field>
 
@@ -45,11 +42,11 @@
 
   <mat-label>Anexo (Comprovante)</mat-label>
 
-  <input matInput [value]="getAttachmentName()" readonly placeholder="Clique para adicionar ou trocar o anexo">
+  <input matInput [value]="getAttachmentName()" readonly placeholder="Clique para adicionar um comprovante">
 
   <mat-icon matSuffix>attach_file</mat-icon>
 
-  <input hidden (change)="onFileSelected($event)" #fileInput type="file" />
+  <input hidden (change)="onFileSelected($event)" #fileInput type="file" accept="image/*,.pdf,.txt" />
 
 </mat-form-field>
 

@@ -63,7 +63,7 @@
       </div>
 
       <div class="actions" role="group" aria-label="Ações da transação">
-        <button (click)="downloadAttachment(t)" aria-label="Baixar anexo da transação">
+        <button (click)="downloadAttachment(t)" *ngIf="t.anexo?.filename" aria-label="Baixar anexo da transação">
           <mat-icon class="icon-settings" matTooltip="Download do anexo" fontSet="material-symbols-outlined"
             aria-hidden="true">download</mat-icon>
         </button>

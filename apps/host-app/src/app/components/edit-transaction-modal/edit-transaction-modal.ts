@@ -48,35 +48,94 @@ registerLocaleData(localePt);
 export class EditTransactionModal implements OnInit {
   editedTransaction!: Transaction;
   newFile: File | null = null;
+  selectedDate: Date | null = null;
 
   data = inject(MAT_DIALOG_DATA) as { transaction: Transaction };
   private dialogRef = inject(MatDialogRef<EditTransactionModal>) as MatDialogRef<EditTransactionModal, any>;
 
   ngOnInit() {
     this.editedTransaction = { ...this.data.transaction };
+
+    // Converter a string da data para objeto Date para o datepicker
+    if (this.editedTransaction.date) {
+      this.selectedDate = new Date(this.editedTransaction.date);
+    } else {
+      this.selectedDate = new Date();
+      this.editedTransaction.date = this.selectedDate.toISOString();
+    }
+
+    // Garantir que a descrição não seja undefined
+    if (!this.editedTransaction.description) {
+      this.editedTransaction.description = '';
+    }
+
+    // Garantir que a categoria não seja undefined
+    if (!this.editedTransaction.category) {
+      this.editedTransaction.category = 'Não definida';
+    }
+
+    // Garantir que o valor seja um número válido
+    if (this.editedTransaction.amount === null || this.editedTransaction.amount === undefined) {
+      this.editedTransaction.amount = 0;
+    }
+
+    // Garantir que o tipo seja válido
+    if (!this.editedTransaction.type) {
+      this.editedTransaction.type = 'expense';
+    }
+
+    // Garantir que o anexo seja inicializado corretamente
+    if (!this.editedTransaction.anexo) {
+      this.editedTransaction.anexo = undefined;
+    }
+
+    // Log para debug
+    console.log('Transaction data:', this.editedTransaction);
+    console.log('Anexo:', this.editedTransaction.anexo);
+    console.log('Attachment name:', this.getAttachmentName());
   }
 
   onFileSelected(event: any): void {
     const file = event.target.files[0];
     if (file) {
       this.newFile = file;
+      console.log('Novo arquivo selecionado:', file.name);
+    } else {
+      this.newFile = null;
+      console.log('Nenhum arquivo selecionado');
+    }
+  }
+
+  onDateChange(date: Date): void {
+    if (date) {
+      this.editedTransaction.date = date.toISOString();
     }
   }
 
   getAttachmentName(): string {
+    // Se há um novo arquivo selecionado, mostra o nome dele
     if (this.newFile) {
       return this.newFile.name;
     }
-    if (this.editedTransaction.anexo) {
-      return this.editedTransaction.anexo.originalName || this.editedTransaction.anexo.filename;
+
+    // Se há um anexo existente, mostra o nome dele
+    if (this.hasValidAttachment()) {
+      return this.editedTransaction.anexo!.originalName || this.editedTransaction.anexo!.filename;
     }
-    return '';
+
+    // Se não há anexo, mostra mensagem amigável
+    return 'Nenhum comprovante anexado';
+  }
+
+  private hasValidAttachment(): boolean {
+    return !!(this.editedTransaction.anexo &&
+      (this.editedTransaction.anexo.originalName || this.editedTransaction.anexo.filename));
   }
 
   submit() {
-    this.dialogRef.close({ 
-      transaction: this.editedTransaction, 
-      file: this.newFile 
+    this.dialogRef.close({
+      transaction: this.editedTransaction,
+      file: this.newFile
     });
   }
 
